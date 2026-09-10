@@ -19,14 +19,17 @@
 .env.production.local
 
 # Database files & SQLite runtime journals
-prisma/*.db
-prisma/*.db-journal
+*.db
+**/*.db
+*.db-journal
+**/*.db-journal
 *.sqlite
 *.sqlite-journal
 
 # User Uploads & dynamic contact spreadsheets
 public/uploads/prod-*
-data/contact-submissions.xlsx
+data/
+
 
 # Debug and runtime logs
 npm-debug.log*
