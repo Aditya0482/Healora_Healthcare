@@ -1,0 +1,42 @@
+# Dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# Next.js build output
+/.next/
+/out/
+
+# Production artifacts
+/build
+/dist
+
+# SENSITIVE ENVIRONMENT VARIABLES (CRITICAL: NEVER COMMIT TO GITHUB)
+.env
+.env*.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Database files & SQLite runtime journals
+prisma/*.db
+prisma/*.db-journal
+*.sqlite
+*.sqlite-journal
+
+# User Uploads & dynamic contact spreadsheets
+public/uploads/prod-*
+data/contact-submissions.xlsx
+
+# Debug and runtime logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# OS and Editor metadata
+.DS_Store
+Thumbs.db
+*.pem
+.vscode/
+.idea/
