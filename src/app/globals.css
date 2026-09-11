@@ -33,3 +33,17 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* Crisp & clean styling when printing or saving as PDF */
+@media print {
+  body {
+    background: #ffffff !important;
+  }
+  nav, footer, .print\:hidden {
+    display: none !important;
+  }
+  @page {
+    margin: 12mm;
+    size: auto;
+  }
+}

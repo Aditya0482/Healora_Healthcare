@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/auth';
 import OrderTracker from '@/components/OrderTracker';
 import RetryPaymentButton from '@/components/RetryPaymentButton';
+import ReceiptActionButtons from '@/components/ReceiptActionButtons';
 import { ArrowLeft, Download, ShieldCheck, MapPin, AlertCircle } from 'lucide-react';
 
 interface OrderDetailPageProps {
@@ -56,14 +57,20 @@ export default async function OrderDetailPage({ params }: OrderDetailPageProps) 
         <ArrowLeft className="w-3.5 h-3.5" /> Back to My Orders
       </Link>
 
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-200 gap-2">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-200 gap-3">
         <div>
           <span className="text-xs text-slate-500">Order Number</span>
           <h1 className="text-xl sm:text-2xl font-black text-slate-900 font-mono">{order.orderNumber}</h1>
+          <div className="text-xs text-slate-500 mt-0.5">
+            Placed on {new Date(order.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
+          </div>
         </div>
-        <div className="text-sm font-bold text-slate-700">
-          Placed on {new Date(order.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
-        </div>
+
+        {order.orderStatus !== 'PENDING_PAYMENT' && (
+          <div className="flex items-center gap-2">
+            <ReceiptActionButtons order={order} variant="outline" />
+          </div>
+        )}
       </div>
 
       {/* Pending Payment Alert & Pay Now */}

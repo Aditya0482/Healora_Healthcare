@@ -4,6 +4,7 @@ import { notFound, redirect } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/auth';
 import OrderTracker from '@/components/OrderTracker';
+import ReceiptActionButtons from '@/components/ReceiptActionButtons';
 import { CheckCircle2, Package, ArrowRight, Download } from 'lucide-react';
 
 interface OrderConfirmationPageProps {
@@ -52,7 +53,8 @@ export default async function OrderConfirmationPage({ params }: OrderConfirmatio
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center justify-center gap-4 pt-2">
+        <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+          <ReceiptActionButtons order={order} variant="primary" />
           <Link
             href={`/account/orders/${order.orderNumber}`}
             className="bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs py-3 px-5 rounded-xl transition shadow-md flex items-center gap-2"

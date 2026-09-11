@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { Package, ArrowRight, Clock, ShieldCheck, Loader2, CheckCircle2, Settings, User } from 'lucide-react';
 import RetryPaymentButton from '@/components/RetryPaymentButton';
+import ReceiptActionButtons from '@/components/ReceiptActionButtons';
 
 export default function CustomerOrdersPage() {
   const router = useRouter();
@@ -99,13 +100,16 @@ export default function CustomerOrdersPage() {
                         }}
                       />
                     )}
-                    <Link
-                      href={`/account/orders/${order.orderNumber}`}
-                      className="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold px-3.5 py-1.5 rounded-lg transition"
-                    >
-                      View Details &amp; Track →
-                    </Link>
-                  </div>
+                      <Link
+                        href={`/account/orders/${order.orderNumber}`}
+                        className="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold px-3.5 py-1.5 rounded-lg transition"
+                      >
+                        View Details &amp; Track →
+                      </Link>
+                      {order.orderStatus !== 'PENDING_PAYMENT' && (
+                        <ReceiptActionButtons order={order} variant="compact" />
+                      )}
+                    </div>
                 </div>
 
                 <div className="divide-y divide-slate-100 text-xs">
