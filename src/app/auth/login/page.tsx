@@ -15,6 +15,7 @@ import {
   Eye,
   EyeOff,
   Sparkles,
+  X,
 } from 'lucide-react';
 
 function LoginForm() {
@@ -195,10 +196,6 @@ function LoginForm() {
         setFpStep('SUCCESS');
         setFpSuccess('');
         setFpError('');
-        const updatedEmail = fpEmail.trim();
-        resetTimerRef.current = setTimeout(() => {
-          handleBackToLogin(updatedEmail);
-        }, 3000);
       } else {
         setFpError(data.error || 'Some error during reset password.');
       }
@@ -245,12 +242,23 @@ function LoginForm() {
       {isForgotPassword ? (
         <div className="space-y-4 text-xs">
           {fpStep === 'SUCCESS' ? (
-            <div className="py-6 px-3 flex flex-col items-center text-center space-y-4 animate-in fade-in zoom-in-95 duration-300">
+            <div className="relative py-4 px-2 flex flex-col items-center text-center space-y-5 animate-in fade-in zoom-in-95 duration-300">
+              {/* Close Button top-right */}
+              <button
+                type="button"
+                onClick={() => handleBackToLogin(fpEmail.trim())}
+                className="absolute -top-2 -right-2 p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-full transition cursor-pointer"
+                title="Close and Go to Sign In"
+                aria-label="Close"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
               {/* Glowing Green Light Aura Container */}
-              <div className="relative flex items-center justify-center my-3">
+              <div className="relative flex items-center justify-center my-2">
                 {/* Outer pulsing emerald-green light glow */}
-                <div className="absolute -inset-4 bg-emerald-400/40 rounded-full blur-2xl animate-pulse" />
-                <div className="absolute -inset-2 bg-gradient-to-tr from-emerald-500 via-green-400 to-teal-400 rounded-full blur-lg opacity-75 animate-pulse" />
+                <div className="absolute -inset-5 bg-emerald-400/40 rounded-full blur-2xl animate-pulse" />
+                <div className="absolute -inset-2 bg-gradient-to-tr from-emerald-500 via-green-400 to-teal-400 rounded-full blur-lg opacity-80 animate-pulse" />
 
                 {/* Center Badge with Emerald Gradient & Ring */}
                 <div className="relative w-20 h-20 rounded-full bg-gradient-to-tr from-emerald-600 via-emerald-500 to-green-500 text-white flex items-center justify-center shadow-xl shadow-emerald-500/50 ring-4 ring-emerald-100">
@@ -276,23 +284,19 @@ function LoginForm() {
                 </h2>
 
                 <p className="text-xs text-slate-600 max-w-xs mx-auto leading-relaxed">
-                  Your password has been updated securely. Redirecting to sign in page...
+                  Your password has been changed successfully. Click the close button below to sign in with your new password.
                 </p>
               </div>
 
-              {/* Glowing animated progress line */}
-              <div className="w-full max-w-[200px] bg-emerald-100 rounded-full h-1.5 overflow-hidden shadow-inner">
-                <div className="bg-gradient-to-r from-emerald-500 via-green-500 to-teal-500 h-full rounded-full animate-pulse w-full" />
-              </div>
-
-              {/* Immediate action button */}
-              <div className="pt-2">
+              {/* Close & Go to Sign In Action Button */}
+              <div className="w-full pt-1">
                 <button
                   type="button"
                   onClick={() => handleBackToLogin(fpEmail.trim())}
-                  className="text-xs font-bold text-teal-700 hover:text-teal-800 hover:underline inline-flex items-center gap-1 py-1 px-3 rounded-lg hover:bg-teal-50 transition cursor-pointer"
+                  className="w-full bg-teal-700 hover:bg-teal-800 text-white font-bold py-3.5 px-4 rounded-xl transition shadow-lg shadow-teal-700/25 flex items-center justify-center gap-2 text-xs cursor-pointer"
                 >
-                  Click here to Sign In now &rarr;
+                  <X className="w-4 h-4" />
+                  <span>Close & Go to Sign In</span>
                 </button>
               </div>
             </div>
