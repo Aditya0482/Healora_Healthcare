@@ -281,7 +281,7 @@ export default function Navbar({ onOpenUploadModal }: { onOpenUploadModal?: () =
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
-              placeholder="Search medicines, salts..."
+              placeholder="Search products (e.g. Rifaximin, Lactulose)..."
               className="w-full bg-slate-100 border border-slate-200 focus:border-teal-500 focus:bg-white text-slate-900 text-xs rounded-full pl-9 pr-20 py-2 outline-none transition"
             />
             <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
