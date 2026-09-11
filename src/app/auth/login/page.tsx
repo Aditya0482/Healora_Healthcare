@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, Suspense } from 'react';
+import React, { useState, useRef, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
@@ -14,6 +14,7 @@ import {
   CheckCircle2,
   Eye,
   EyeOff,
+  Sparkles,
 } from 'lucide-react';
 
 function LoginForm() {
@@ -40,10 +41,29 @@ function LoginForm() {
   const [fpConfirmPassword, setFpConfirmPassword] = useState('');
   const [showFpNewPassword, setShowFpNewPassword] = useState(false);
   const [showFpConfirmPassword, setShowFpConfirmPassword] = useState(false);
-  const [fpStep, setFpStep] = useState<'INPUT' | 'VERIFY'>('INPUT');
+  const [fpStep, setFpStep] = useState<'INPUT' | 'VERIFY' | 'SUCCESS'>('INPUT');
   const [fpLoading, setFpLoading] = useState(false);
   const [fpError, setFpError] = useState('');
   const [fpSuccess, setFpSuccess] = useState('');
+  const resetTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleBackToLogin = (prefillEmail?: string) => {
+    if (resetTimerRef.current) {
+      clearTimeout(resetTimerRef.current);
+      resetTimerRef.current = null;
+    }
+    setIsForgotPassword(false);
+    setFpStep('INPUT');
+    if (prefillEmail) {
+      setEmail(prefillEmail);
+    }
+    setPassword('');
+    setFpOtp('');
+    setFpNewPassword('');
+    setFpConfirmPassword('');
+    setFpSuccess('');
+    setFpError('');
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -172,13 +192,13 @@ function LoginForm() {
 
       const data = await res.json();
       if (res.ok) {
-        setFpSuccess('✓ Password reset successfully....!');
-        setTimeout(() => {
-          setIsForgotPassword(false);
-          setEmail(fpEmail);
-          setFpSuccess('');
-          setFpError('');
-        }, 1500);
+        setFpStep('SUCCESS');
+        setFpSuccess('');
+        setFpError('');
+        const updatedEmail = fpEmail.trim();
+        resetTimerRef.current = setTimeout(() => {
+          handleBackToLogin(updatedEmail);
+        }, 3000);
       } else {
         setFpError(data.error || 'Some error during reset password.');
       }
@@ -199,11 +219,17 @@ function LoginForm() {
           className="w-14 h-14 object-contain mx-auto mb-2"
         />
         <h1 className="text-2xl font-extrabold text-slate-900">
-          {isForgotPassword ? 'Reset Password' : 'Sign In to Healora'}
+          {isForgotPassword
+            ? fpStep === 'SUCCESS'
+              ? 'Password Reset'
+              : 'Reset Password'
+            : 'Sign In to Healora'}
         </h1>
         <p className="text-xs text-slate-500">
           {isForgotPassword
-            ? ''
+            ? fpStep === 'SUCCESS'
+              ? 'Your password has been updated securely'
+              : ''
             : 'Access your products, account and order tracking.'}
         </p>
       </div>
@@ -218,143 +244,195 @@ function LoginForm() {
       {/* ================= FORGOT PASSWORD FLOW (EMAIL ONLY) ================= */}
       {isForgotPassword ? (
         <div className="space-y-4 text-xs">
-          {fpError && (
-            <div className="bg-rose-50 border border-rose-200 text-rose-800 p-3.5 rounded-xl flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 flex-shrink-0" />
-              <span>{fpError}</span>
-            </div>
-          )}
+          {fpStep === 'SUCCESS' ? (
+            <div className="py-6 px-3 flex flex-col items-center text-center space-y-4 animate-in fade-in zoom-in-95 duration-300">
+              {/* Glowing Green Light Aura Container */}
+              <div className="relative flex items-center justify-center my-3">
+                {/* Outer pulsing emerald-green light glow */}
+                <div className="absolute -inset-4 bg-emerald-400/40 rounded-full blur-2xl animate-pulse" />
+                <div className="absolute -inset-2 bg-gradient-to-tr from-emerald-500 via-green-400 to-teal-400 rounded-full blur-lg opacity-75 animate-pulse" />
 
-          {fpSuccess && (
-            <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 p-3.5 rounded-xl flex items-center gap-2">
-              <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
-              <span>{fpSuccess}</span>
-            </div>
-          )}
+                {/* Center Badge with Emerald Gradient & Ring */}
+                <div className="relative w-20 h-20 rounded-full bg-gradient-to-tr from-emerald-600 via-emerald-500 to-green-500 text-white flex items-center justify-center shadow-xl shadow-emerald-500/50 ring-4 ring-emerald-100">
+                  <CheckCircle2 className="w-10 h-10 text-white stroke-[2.5]" />
+                  <span className="absolute -top-1 -right-1 bg-white text-emerald-600 rounded-full p-1 shadow-md border border-emerald-100">
+                    <Sparkles className="w-3.5 h-3.5 fill-emerald-500 text-emerald-500" />
+                  </span>
+                </div>
+              </div>
 
-          {fpStep === 'INPUT' ? (
-            <form onSubmit={handleFpSendOtp} className="space-y-4">
-              <div>
-                <label className="font-bold text-slate-700 block mb-1">
-                  Registered Email Address <span className="text-rose-500">*</span>
-                </label>
-                <input
-                  type="email"
-                  required
-                  value={fpEmail}
-                  onChange={(e) => setFpEmail(e.target.value)}
-                  placeholder="e.g demo@gmail.com"
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-slate-900 outline-none focus:border-teal-700 text-xs font-medium"
-                />
-                <p className="text-[11px] text-slate-500 mt-1 font-medium">
-                  Enter email to reset your password
+              {/* Status Badge & Text */}
+              <div className="space-y-2">
+                <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full text-xs font-bold bg-emerald-50 text-emerald-800 border border-emerald-200/80 shadow-xs">
+                  <span className="relative flex h-2 w-2">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                  </span>
+                  Password Reset Successfully!
+                </div>
+
+                <h2 className="text-xl font-black text-slate-900 tracking-tight">
+                  Password Updated!
+                </h2>
+
+                <p className="text-xs text-slate-600 max-w-xs mx-auto leading-relaxed">
+                  Your password has been updated securely. Redirecting to sign in page...
                 </p>
               </div>
 
-              <button
-                type="submit"
-                disabled={fpLoading}
-                className="w-full bg-teal-700 hover:bg-teal-800 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-teal-700/20 flex items-center justify-center gap-2"
-              >
-                {fpLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Send Verification OTP to Email'}
-              </button>
-            </form>
+              {/* Glowing animated progress line */}
+              <div className="w-full max-w-[200px] bg-emerald-100 rounded-full h-1.5 overflow-hidden shadow-inner">
+                <div className="bg-gradient-to-r from-emerald-500 via-green-500 to-teal-500 h-full rounded-full animate-pulse w-full" />
+              </div>
+
+              {/* Immediate action button */}
+              <div className="pt-2">
+                <button
+                  type="button"
+                  onClick={() => handleBackToLogin(fpEmail.trim())}
+                  className="text-xs font-bold text-teal-700 hover:text-teal-800 hover:underline inline-flex items-center gap-1 py-1 px-3 rounded-lg hover:bg-teal-50 transition cursor-pointer"
+                >
+                  Click here to Sign In now &rarr;
+                </button>
+              </div>
+            </div>
           ) : (
-            <form onSubmit={handleFpReset} className="space-y-3.5">
-              <div>
-                <label className="font-bold text-slate-700 block mb-1">
-                  Enter 6-Digit OTP <span className="text-teal-700 font-semibold">(Sent to your email)</span>
-                </label>
-                <input
-                  type="text"
-                  required
-                  maxLength={6}
-                  value={fpOtp}
-                  onChange={(e) => setFpOtp(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-slate-900 text-center font-mono text-base tracking-widest outline-none focus:border-teal-700 font-bold"
-                />
-              </div>
+            <>
+              {fpError && (
+                <div className="bg-rose-50 border border-rose-200 text-rose-800 p-3.5 rounded-xl flex items-center gap-2">
+                  <AlertCircle className="w-4 h-4 flex-shrink-0" />
+                  <span>{fpError}</span>
+                </div>
+              )}
 
-              <div>
-                <label className="font-bold text-slate-700 block mb-1">
-                  New Password <span className="text-rose-500">*</span>
-                </label>
-                <div className="relative">
-                  <input
-                    type={showFpNewPassword ? 'text' : 'password'}
-                    required
-                    placeholder="Min 6 characters"
-                    value={fpNewPassword}
-                    onChange={(e) => setFpNewPassword(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 pr-10 text-slate-900 outline-none focus:border-teal-700"
-                  />
+              {fpSuccess && (
+                <div className="bg-emerald-50 border border-emerald-200 text-emerald-800 p-3.5 rounded-xl flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 flex-shrink-0" />
+                  <span>{fpSuccess}</span>
+                </div>
+              )}
+
+              {fpStep === 'INPUT' ? (
+                <form onSubmit={handleFpSendOtp} className="space-y-4">
+                  <div>
+                    <label className="font-bold text-slate-700 block mb-1">
+                      Registered Email Address <span className="text-rose-500">*</span>
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      value={fpEmail}
+                      onChange={(e) => setFpEmail(e.target.value)}
+                      placeholder="e.g demo@gmail.com"
+                      className="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-slate-900 outline-none focus:border-teal-700 text-xs font-medium"
+                    />
+                    <p className="text-[11px] text-slate-500 mt-1 font-medium">
+                      Enter email to reset your password
+                    </p>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={fpLoading}
+                    className="w-full bg-teal-700 hover:bg-teal-800 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-teal-700/20 flex items-center justify-center gap-2"
+                  >
+                    {fpLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Send Verification OTP to Email'}
+                  </button>
+                </form>
+              ) : (
+                <form onSubmit={handleFpReset} className="space-y-3.5">
+                  <div>
+                    <label className="font-bold text-slate-700 block mb-1">
+                      Enter 6-Digit OTP <span className="text-teal-700 font-semibold">(Sent to your email)</span>
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      maxLength={6}
+                      value={fpOtp}
+                      onChange={(e) => setFpOtp(e.target.value)}
+                      className="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-slate-900 text-center font-mono text-base tracking-widest outline-none focus:border-teal-700 font-bold"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="font-bold text-slate-700 block mb-1">
+                      New Password <span className="text-rose-500">*</span>
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={showFpNewPassword ? 'text' : 'password'}
+                        required
+                        placeholder="Min 6 characters"
+                        value={fpNewPassword}
+                        onChange={(e) => setFpNewPassword(e.target.value)}
+                        className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 pr-10 text-slate-900 outline-none focus:border-teal-700"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowFpNewPassword(!showFpNewPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition focus:outline-none p-1 cursor-pointer"
+                        aria-label={showFpNewPassword ? 'Hide password' : 'Show password'}
+                      >
+                        {showFpNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="font-bold text-slate-700 block mb-1">
+                      Confirm New Password <span className="text-rose-500">*</span>
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={showFpConfirmPassword ? 'text' : 'password'}
+                        required
+                        placeholder="Re-enter new password"
+                        value={fpConfirmPassword}
+                        onChange={(e) => setFpConfirmPassword(e.target.value)}
+                        className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 pr-10 text-slate-900 outline-none focus:border-teal-700"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowFpConfirmPassword(!showFpConfirmPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition focus:outline-none p-1 cursor-pointer"
+                        aria-label={showFpConfirmPassword ? 'Hide password' : 'Show password'}
+                      >
+                        {showFpConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                      </button>
+                    </div>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={fpLoading}
+                    className="w-full bg-teal-700 hover:bg-teal-800 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-teal-700/20 flex items-center justify-center gap-2"
+                  >
+                    {fpLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Reset Password & Save'}
+                  </button>
+
                   <button
                     type="button"
-                    onClick={() => setShowFpNewPassword(!showFpNewPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition focus:outline-none p-1 cursor-pointer"
-                    aria-label={showFpNewPassword ? 'Hide password' : 'Show password'}
+                    onClick={() => setFpStep('INPUT')}
+                    className="w-full text-center text-[11px] text-slate-500 hover:text-slate-800 font-semibold pt-1"
                   >
-                    {showFpNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                    Change Email Address
                   </button>
-                </div>
+                </form>
+              )}
+
+              <div className="pt-2 text-center border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => handleBackToLogin()}
+                  className="text-xs font-bold text-teal-700 hover:underline inline-flex items-center gap-1.5"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5" />
+                  Back to Sign In
+                </button>
               </div>
-
-              <div>
-                <label className="font-bold text-slate-700 block mb-1">
-                  Confirm New Password <span className="text-rose-500">*</span>
-                </label>
-                <div className="relative">
-                  <input
-                    type={showFpConfirmPassword ? 'text' : 'password'}
-                    required
-                    placeholder="Re-enter new password"
-                    value={fpConfirmPassword}
-                    onChange={(e) => setFpConfirmPassword(e.target.value)}
-                    className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 pr-10 text-slate-900 outline-none focus:border-teal-700"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowFpConfirmPassword(!showFpConfirmPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition focus:outline-none p-1 cursor-pointer"
-                    aria-label={showFpConfirmPassword ? 'Hide password' : 'Show password'}
-                  >
-                    {showFpConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                disabled={fpLoading}
-                className="w-full bg-teal-700 hover:bg-teal-800 text-white font-bold py-3 rounded-xl transition shadow-lg shadow-teal-700/20 flex items-center justify-center gap-2"
-              >
-                {fpLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Reset Password & Save'}
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setFpStep('INPUT')}
-                className="w-full text-center text-[11px] text-slate-500 hover:text-slate-800 font-semibold pt-1"
-              >
-                Change Email Address
-              </button>
-            </form>
+            </>
           )}
-
-          <div className="pt-2 text-center border-t border-slate-100">
-            <button
-              type="button"
-              onClick={() => {
-                setIsForgotPassword(false);
-                setFpError('');
-                setFpSuccess('');
-              }}
-              className="text-xs font-bold text-teal-700 hover:underline inline-flex items-center gap-1.5"
-            >
-              <ArrowLeft className="w-3.5 h-3.5" />
-              Back to Sign In
-            </button>
-          </div>
         </div>
       ) : (
         /* ================= REGULAR SIGN IN FLOW (EMAIL & PASSWORD ONLY) ================= */
