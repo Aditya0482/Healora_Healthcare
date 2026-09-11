@@ -94,6 +94,16 @@ export default function PaymentReceiptModal({ order, isOpen, onClose }: PaymentR
     window.print();
   };
 
+  // Automatically trigger download/print dialog when user clicks Download Receipt
+  React.useEffect(() => {
+    if (isOpen) {
+      const timer = setTimeout(() => {
+        window.print();
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
+
   return (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-3 sm:p-6 print:p-0 print:bg-white">
       {/* Modal Container */}
@@ -102,11 +112,11 @@ export default function PaymentReceiptModal({ order, isOpen, onClose }: PaymentR
         <div className="bg-slate-900 text-white px-6 py-4 flex items-center justify-between print:hidden border-b border-slate-800">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-lg bg-teal-500/20 text-teal-400 flex items-center justify-center font-bold">
-              <ShieldCheck className="w-5 h-5" />
+              <Download className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="font-extrabold text-sm text-white">Payment Receipt &amp; Tax Invoice</h3>
-              <p className="text-[11px] text-teal-300">Verified Official Transaction Copy</p>
+              <h3 className="font-extrabold text-sm text-white">Download Payment Receipt</h3>
+              <p className="text-[11px] text-teal-300">Save as PDF or Print Official Invoice</p>
             </div>
           </div>
 
@@ -115,8 +125,8 @@ export default function PaymentReceiptModal({ order, isOpen, onClose }: PaymentR
               onClick={handlePrintOrDownload}
               className="bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow"
             >
-              <Printer className="w-3.5 h-3.5" />
-              Print / Save PDF
+              <Download className="w-3.5 h-3.5" />
+              Download Receipt (PDF)
             </button>
             <button
               onClick={onClose}
@@ -314,7 +324,7 @@ export default function PaymentReceiptModal({ order, isOpen, onClose }: PaymentR
         {/* Modal Bottom Buttons (Hidden on Print) */}
         <div className="bg-slate-50 px-6 py-4 border-t border-slate-100 flex items-center justify-between print:hidden">
           <span className="text-xs text-slate-500">
-            You can download this receipt as a PDF by clicking <strong>Print / Save PDF</strong>.
+            Click <strong>Download Receipt</strong> to save the official PDF on your phone or computer.
           </span>
           <div className="flex items-center gap-2">
             <button
@@ -328,7 +338,7 @@ export default function PaymentReceiptModal({ order, isOpen, onClose }: PaymentR
               className="bg-teal-700 hover:bg-teal-800 text-white text-xs font-bold px-4 py-2 rounded-xl transition shadow flex items-center gap-1.5"
             >
               <Download className="w-3.5 h-3.5" />
-              Download / Print Receipt
+              Download Receipt
             </button>
           </div>
         </div>
