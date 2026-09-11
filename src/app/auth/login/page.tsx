@@ -173,7 +173,7 @@ function LoginForm() {
     }
 
     if (fpNewPassword !== fpConfirmPassword) {
-      setFpError('New password and old passeword does not match');
+      setFpError('New password and Confirm Password Does Not Match');
       return;
     }
 
@@ -242,18 +242,7 @@ function LoginForm() {
       {isForgotPassword ? (
         <div className="space-y-4 text-xs">
           {fpStep === 'SUCCESS' ? (
-            <div className="relative py-4 px-2 flex flex-col items-center text-center space-y-5 animate-in fade-in zoom-in-95 duration-300">
-              {/* Close Button top-right */}
-              <button
-                type="button"
-                onClick={() => handleBackToLogin(fpEmail.trim())}
-                className="absolute -top-2 -right-2 p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-full transition cursor-pointer"
-                title="Close and Go to Sign In"
-                aria-label="Close"
-              >
-                <X className="w-5 h-5" />
-              </button>
-
+            <div className="py-4 px-2 flex flex-col items-center text-center space-y-5 animate-in fade-in zoom-in-95 duration-300">
               {/* Glowing Green Light Aura Container */}
               <div className="relative flex items-center justify-center my-2">
                 {/* Outer pulsing emerald-green light glow */}
