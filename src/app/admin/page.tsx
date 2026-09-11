@@ -37,6 +37,7 @@ import {
   Download,
   FileSpreadsheet,
   Database,
+  LogOut,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -378,9 +379,10 @@ function AdminConsole() {
 
           <button
             onClick={() => logout()}
-            className="w-full text-left text-xs font-bold text-rose-400 hover:text-rose-300 transition px-3.5 py-2 rounded-xl hover:bg-slate-800"
+            className="w-full flex items-center justify-center gap-2 text-center text-xs font-bold text-rose-400 hover:text-rose-300 transition px-3.5 py-2.5 rounded-xl hover:bg-rose-500/10 border border-rose-500/20"
           >
-            Sign Out
+            <LogOut className="w-4 h-4" />
+            <span>Sign Out</span>
           </button>
         </div>
       </aside>
