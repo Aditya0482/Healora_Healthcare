@@ -368,12 +368,10 @@ function AdminConsole() {
           <Link
             href="/"
             target="_blank"
-            className="flex items-center justify-between text-xs font-bold text-slate-400 hover:text-white transition px-3.5 py-2 rounded-xl hover:bg-slate-800"
+            className="w-full flex items-center justify-center gap-2 text-center text-xs font-bold text-slate-400 hover:text-white transition px-3.5 py-2.5 rounded-xl hover:bg-slate-800 border border-slate-700/50"
           >
-            <span className="flex items-center gap-2">
-              <ArrowLeft className="w-4 h-4" />
-              View Website
-            </span>
+            <ArrowLeft className="w-4 h-4" />
+            <span>View Website</span>
             <ExternalLink className="w-3.5 h-3.5 text-slate-500" />
           </Link>
 
