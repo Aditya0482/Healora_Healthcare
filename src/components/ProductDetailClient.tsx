@@ -18,6 +18,7 @@ import {
   Maximize2,
   X,
   ZoomIn,
+  Building2,
 } from 'lucide-react';
 
 interface ProductDetailClientProps {
@@ -272,6 +273,14 @@ export default function ProductDetailClient({ product, substitutes }: ProductDet
               <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold text-slate-900 leading-tight break-words">
                 {product.name}
               </h1>
+
+              {/* Manufacturer Information Badge */}
+              <div className="mt-2.5 inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100/90 border border-slate-200 text-slate-700 rounded-lg text-xs font-semibold">
+                <Building2 className="w-3.5 h-3.5 text-teal-700 flex-shrink-0" />
+                <span>
+                  Manufactured by: <strong className="text-slate-900 font-bold">{product.manufacturer?.name || 'Healora HealthCare Pvt. Ltd.'}</strong>
+                </span>
+              </div>
 
               {product.description && (
                 <p className="text-xs sm:text-sm text-slate-600 mt-2.5 leading-relaxed line-clamp-3">

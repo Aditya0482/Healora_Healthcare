@@ -128,6 +128,11 @@ export default function ProductCard({ product }: ProductCardProps) {
               {product.name}
             </h3>
           </Link>
+
+          {/* Manufacturer by name */}
+          <div className="text-[10px] text-slate-500 mt-1 truncate">
+            Manufactured by: <span className="font-semibold text-slate-700">{product.manufacturer?.name || 'Healora HealthCare Pvt. Ltd.'}</span>
+          </div>
         </div>
 
         {/* Pricing & CTA */}

@@ -33,6 +33,7 @@ import {
   Key,
   MessageSquare,
   Mail,
+  Building2,
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -213,6 +214,7 @@ function AdminProductsPanel() {
 
   // Form fields
   const [formName, setFormName] = useState('');
+  const [formManufacturer, setFormManufacturer] = useState('Healora HealthCare Pvt. Ltd.');
   const [formCategoryId, setFormCategoryId] = useState('');
   const [formDescription, setFormDescription] = useState('');
   const [formMrp, setFormMrp] = useState('');
@@ -299,6 +301,9 @@ function AdminProductsPanel() {
     const errors: Record<string, string> = {};
     if (!formName.trim()) {
       errors.name = 'Please Enter Product Name';
+    }
+    if (!formManufacturer.trim()) {
+      errors.manufacturer = 'Please Enter Manufacturer Name (Compulsory)';
     }
     if (!formCategoryId) {
       errors.category = 'Please Select A Category';
@@ -415,6 +420,7 @@ function AdminProductsPanel() {
     setFormSuccess(null);
     setFieldErrors({});
     setFormName('');
+    setFormManufacturer('Healora HealthCare Pvt. Ltd.');
     setFormDescription('');
     setFormMrp('500');
     setFormDiscountPercent('20');
@@ -442,6 +448,7 @@ function AdminProductsPanel() {
     setFieldErrors({});
     setCurrentEditingProduct(p);
     setFormName(p.name);
+    setFormManufacturer(p.manufacturer?.name || 'Healora HealthCare Pvt. Ltd.');
     setFormDescription(p.description || '');
     setFormCategoryId(p.categoryId);
     setFormTopCategory(p.categoryId);
@@ -485,6 +492,7 @@ function AdminProductsPanel() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           name: formName,
+          manufacturerName: formManufacturer,
           categoryId: targetCatId,
           description: formDescription,
           mrp: Number(formMrp),
@@ -533,6 +541,7 @@ function AdminProductsPanel() {
         body: JSON.stringify({
           productId: currentEditingProduct.id,
           name: formName,
+          manufacturerName: formManufacturer,
           categoryId: targetCatId,
           description: formDescription,
           mrp: Number(formMrp),
@@ -748,6 +757,9 @@ function AdminProductsPanel() {
                           </div>
                           <div className="text-[11px] text-slate-500 line-clamp-1 mt-0.5">
                             {p.description}
+                          </div>
+                          <div className="text-[10px] text-teal-700 font-semibold mt-0.5">
+                            Mfg: {p.manufacturer?.name || 'Healora HealthCare Pvt. Ltd.'}
                           </div>
                         </div>
                       </div>
@@ -1371,6 +1383,35 @@ function AdminProductsPanel() {
                 {fieldErrors.name && (
                   <p className="text-[11px] font-bold text-rose-600 flex items-center gap-1 mt-1">
                     <AlertCircle className="w-3 h-3 flex-shrink-0" /> {fieldErrors.name}
+                  </p>
+                )}
+              </div>
+
+              {/* Manufacturer Name (Compulsory) */}
+              <div>
+                <label className="block font-bold text-slate-700 mb-1">
+                  Manufactured By (Company Name) <span className="text-rose-500">* (Compulsory)</span>
+                </label>
+                <div className="relative">
+                  <input
+                    type="text"
+                    value={formManufacturer}
+                    onChange={(e) => {
+                      setFormManufacturer(e.target.value);
+                      if (fieldErrors.manufacturer) setFieldErrors((prev) => ({ ...prev, manufacturer: '' }));
+                    }}
+                    placeholder="e.g. Healora HealthCare Pvt. Ltd."
+                    className={`w-full border rounded-xl p-2.5 text-xs outline-none transition ${
+                      fieldErrors.manufacturer
+                        ? 'border-rose-500 bg-rose-50/40 ring-2 ring-rose-200 text-rose-950 font-semibold'
+                        : 'border-slate-200 focus:border-teal-700'
+                    }`}
+                  />
+                  <Building2 className="w-4 h-4 text-slate-400 absolute right-3 top-3" />
+                </div>
+                {fieldErrors.manufacturer && (
+                  <p className="text-[11px] font-bold text-rose-600 flex items-center gap-1 mt-1">
+                    <AlertCircle className="w-3 h-3 flex-shrink-0" /> {fieldErrors.manufacturer}
                   </p>
                 )}
               </div>

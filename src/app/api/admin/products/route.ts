@@ -38,6 +38,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const {
       name,
+      manufacturerName,
       description,
       categoryId,
       subcategoryId,
@@ -60,6 +61,27 @@ export async function POST(req: NextRequest) {
         { error: 'Product name, category, MRP, and selling price are required.' },
         { status: 400 }
       );
+    }
+
+    if (!manufacturerName || !manufacturerName.trim()) {
+      return NextResponse.json(
+        { error: 'Manufacturer name is required (Compulsory).' },
+        { status: 400 }
+      );
+    }
+
+    // Find or upsert single manufacturer
+    const cleanMfgName = manufacturerName.trim();
+    let manufacturer = await prisma.manufacturer.findFirst({
+      where: { name: { equals: cleanMfgName } },
+    });
+    if (!manufacturer) {
+      manufacturer = await prisma.manufacturer.create({
+        data: {
+          name: cleanMfgName,
+          countryOfOrigin: 'India',
+        },
+      });
     }
 
     if (isFeatured) {
@@ -99,6 +121,7 @@ export async function POST(req: NextRequest) {
         genericSaltName: genericSaltName || '',
         categoryId,
         subcategoryId: subcategoryId || null,
+        manufacturerId: manufacturer.id,
         form: form || '',
         strength: strength || '',
         packSize: packSize || '',
@@ -212,6 +235,18 @@ export async function PATCH(req: NextRequest) {
     if (form !== undefined) updateData.form = form;
     if (strength !== undefined) updateData.strength = strength;
     if (packSize !== undefined) updateData.packSize = packSize;
+    if (body.manufacturerName !== undefined && body.manufacturerName.trim()) {
+      const cleanMfg = body.manufacturerName.trim();
+      let mfg = await prisma.manufacturer.findFirst({
+        where: { name: { equals: cleanMfg } },
+      });
+      if (!mfg) {
+        mfg = await prisma.manufacturer.create({
+          data: { name: cleanMfg, countryOfOrigin: 'India' },
+        });
+      }
+      updateData.manufacturerId = mfg.id;
+    }
     if (images && Array.isArray(images)) {
       const list = images.filter(Boolean);
       if (list.length > 0) {

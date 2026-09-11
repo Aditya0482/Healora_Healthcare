@@ -15,10 +15,10 @@ const CATEGORIES = [
     dot: 'bg-amber-500',
     badge: 'Top 4 Products',
     subs: [
-      { label: 'Top 1', name: 'Hepatic Encephalopathy', slug: 'hepatic-encephalopathy' },
-      { label: 'Top 2', name: 'Ascites & Fluid', slug: 'ascites-diuretics' },
-      { label: 'Top 3', name: 'Portal Hypertension', slug: 'portal-hypertension' },
-      { label: 'Top 4', name: 'Bile Acid Therapies', slug: 'hepatoprotective-bile-acids' },
+      { label: 'Top 1', name: 'Liver Care', slug: 'hepatic-encephalopathy' },
+      { label: 'Top 2', name: 'Health Care', slug: 'ascites-diuretics' },
+      { label: 'Top 3', name: 'Daily Care', slug: 'portal-hypertension' },
+      { label: 'Top 4', name: 'Wellness Care', slug: 'hepatoprotective-bile-acids' },
     ],
   },
   {
@@ -28,9 +28,9 @@ const CATEGORIES = [
     badge: 'Top 4 Products',
     subs: [
       { label: 'Top 1', name: 'Personal Hygiene', slug: 'personal-hygiene' },
-      { label: 'Top 2', name: 'Sexual Wellness', slug: 'sexual-wellness' },
-      { label: 'Top 3', name: 'Feminine Care', slug: 'feminine-care' },
-      { label: 'Top 4', name: "Men's Wellness", slug: 'mens-wellness' },
+      { label: 'Top 2', name: 'Intimate Wellness', slug: 'sexual-wellness' },
+      { label: 'Top 3', name: 'Personal Wellness', slug: 'feminine-care' },
+      { label: 'Top 4', name: "Intimate Essential", slug: 'mens-wellness' },
     ],
   },
 ];
