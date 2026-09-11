@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useRef, Suspense } from 'react';
+import React, { useState, useRef, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
@@ -46,7 +46,16 @@ function LoginForm() {
   const [fpLoading, setFpLoading] = useState(false);
   const [fpError, setFpError] = useState('');
   const [fpSuccess, setFpSuccess] = useState('');
+  const [resendCountdown, setResendCountdown] = useState(0);
   const resetTimerRef = useRef<NodeJS.Timeout | null>(null);
+
+  useEffect(() => {
+    if (resendCountdown <= 0) return;
+    const timer = setInterval(() => {
+      setResendCountdown((prev) => (prev <= 1 ? 0 : prev - 1));
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [resendCountdown]);
 
   const handleBackToLogin = (prefillEmail?: string) => {
     if (resetTimerRef.current) {
@@ -55,6 +64,7 @@ function LoginForm() {
     }
     setIsForgotPassword(false);
     setFpStep('INPUT');
+    setResendCountdown(0);
     if (prefillEmail) {
       setEmail(prefillEmail);
     }
@@ -145,12 +155,48 @@ function LoginForm() {
           setFpSuccess(`OTP generated successfully! (Verification code: ${receivedOtp})`);
           setFpOtp(receivedOtp || '');
         }
+        setResendCountdown(30);
         setFpStep('VERIFY');
       } else {
         setFpError(data.error || 'This email is not registered.');
       }
     } catch {
       setFpError('Does not connect to server.Please try again.');
+    } finally {
+      setFpLoading(false);
+    }
+  };
+
+  // Forgot Password - Resend OTP
+  const handleFpResendOtp = async () => {
+    if (resendCountdown > 0 || fpLoading) return;
+    setFpError('');
+    setFpSuccess('');
+    setFpLoading(true);
+
+    try {
+      const res = await fetch('/api/auth/forgot-password', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'SEND_OTP', email: fpEmail.trim() }),
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        const receivedOtp = data.otp;
+        if (data.emailSent) {
+          setFpSuccess('New verification OTP sent to your email! Please check inbox / spam.');
+          setFpOtp('');
+        } else {
+          setFpSuccess(`New OTP generated successfully! (Verification code: ${receivedOtp})`);
+          setFpOtp(receivedOtp || '');
+        }
+        setResendCountdown(30);
+      } else {
+        setFpError(data.error || 'Failed to resend OTP. Please try again.');
+      }
+    } catch {
+      setFpError('Server error. Please try again.');
     } finally {
       setFpLoading(false);
     }
@@ -344,8 +390,20 @@ function LoginForm() {
                       maxLength={6}
                       value={fpOtp}
                       onChange={(e) => setFpOtp(e.target.value)}
+                      placeholder="000000"
                       className="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-slate-900 text-center font-mono text-base tracking-widest outline-none focus:border-teal-700 font-bold"
                     />
+                    <div className="flex items-center justify-between mt-1.5 px-0.5 text-[11px]">
+                      <span className="text-slate-500">Didn&apos;t receive OTP?</span>
+                      <button
+                        type="button"
+                        onClick={handleFpResendOtp}
+                        disabled={fpLoading || resendCountdown > 0}
+                        className="font-bold text-teal-700 hover:text-teal-800 hover:underline disabled:text-slate-400 disabled:no-underline cursor-pointer disabled:cursor-not-allowed transition bg-transparent p-0 border-0"
+                      >
+                        {resendCountdown > 0 ? `Resend OTP in ${resendCountdown}s` : 'Resend OTP'}
+                      </button>
+                    </div>
                   </div>
 
                   <div>
@@ -406,8 +464,13 @@ function LoginForm() {
 
                   <button
                     type="button"
-                    onClick={() => setFpStep('INPUT')}
-                    className="w-full text-center text-[11px] text-slate-500 hover:text-slate-800 font-semibold pt-1"
+                    onClick={() => {
+                      setFpStep('INPUT');
+                      setResendCountdown(0);
+                      setFpError('');
+                      setFpSuccess('');
+                    }}
+                    className="w-full text-center text-[11px] text-slate-500 hover:text-slate-800 font-semibold pt-1 cursor-pointer"
                   >
                     Change Email Address
                   </button>
