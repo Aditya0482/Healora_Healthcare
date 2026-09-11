@@ -34,8 +34,193 @@ import {
   MessageSquare,
   Mail,
   Building2,
+  Download,
+  FileSpreadsheet,
+  Database,
 } from 'lucide-react';
 import Link from 'next/link';
+
+// Export Data Modal Component
+function ExportDataModal({ onClose }: { onClose: () => void }) {
+  const [downloading, setDownloading] = useState<string | null>(null);
+
+  const handleDownload = (type: string, filename: string) => {
+    setDownloading(type);
+    const link = document.createElement('a');
+    link.href = `/api/admin/export?type=${type}`;
+    link.download = filename;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setTimeout(() => setDownloading(null), 1500);
+  };
+
+  return (
+    <div className="fixed inset-0 z-[99999] bg-slate-900/70 backdrop-blur-sm overflow-y-auto p-4 flex justify-center items-center">
+      <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-xl w-full shadow-2xl border border-slate-200 animate-in fade-in zoom-in-95 my-8">
+        <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-6">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-700 flex items-center justify-center border border-emerald-100 shadow-sm">
+              <FileSpreadsheet className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="text-lg font-extrabold text-slate-900">Export Data to Excel / CSV</h3>
+              <p className="text-xs text-slate-500">Download store records directly into Excel spreadsheets</p>
+            </div>
+          </div>
+          <button
+            onClick={onClose}
+            className="text-slate-400 hover:text-slate-600 p-1.5 rounded-xl hover:bg-slate-100 transition"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        <div className="space-y-3">
+          {/* Card 1: Products */}
+          <div className="flex items-center justify-between p-4 rounded-2xl border border-slate-200 hover:border-emerald-300 hover:bg-emerald-50/30 transition gap-3">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-9 h-9 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center flex-shrink-0">
+                <Pill className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <div className="flex items-center gap-2">
+                  <h4 className="text-xs font-extrabold text-slate-900">Products Catalog</h4>
+                  <span className="bg-emerald-100 text-emerald-800 text-[9px] font-bold px-1.5 py-0.5 rounded">Excel CSV</span>
+                </div>
+                <p className="text-[11px] text-slate-500 mt-0.5 truncate">
+                  Names, MRP, Selling Price, Stock, Category, Manufacturer &amp; Images
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => handleDownload('products', 'Healora_Products.csv')}
+              disabled={Boolean(downloading)}
+              className="flex-shrink-0 flex items-center gap-1.5 bg-emerald-700 hover:bg-emerald-800 text-white font-bold text-xs px-3.5 py-2 rounded-xl transition shadow-sm"
+            >
+              {downloading === 'products' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
+              <span>Download</span>
+            </button>
+          </div>
+
+          {/* Card 2: Orders */}
+          <div className="flex items-center justify-between p-4 rounded-2xl border border-slate-200 hover:border-blue-300 hover:bg-blue-50/30 transition gap-3">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center flex-shrink-0">
+                <Package className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <div className="flex items-center gap-2">
+                  <h4 className="text-xs font-extrabold text-slate-900">Orders &amp; Sales</h4>
+                  <span className="bg-blue-100 text-blue-800 text-[9px] font-bold px-1.5 py-0.5 rounded">Excel CSV</span>
+                </div>
+                <p className="text-[11px] text-slate-500 mt-0.5 truncate">
+                  Order numbers, customer addresses, items, amounts &amp; payment status
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => handleDownload('orders', 'Healora_Orders.csv')}
+              disabled={Boolean(downloading)}
+              className="flex-shrink-0 flex items-center gap-1.5 bg-blue-700 hover:bg-blue-800 text-white font-bold text-xs px-3.5 py-2 rounded-xl transition shadow-sm"
+            >
+              {downloading === 'orders' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
+              <span>Download</span>
+            </button>
+          </div>
+
+          {/* Card 3: Users */}
+          <div className="flex items-center justify-between p-4 rounded-2xl border border-slate-200 hover:border-purple-300 hover:bg-purple-50/30 transition gap-3">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-9 h-9 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center flex-shrink-0">
+                <Users className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <div className="flex items-center gap-2">
+                  <h4 className="text-xs font-extrabold text-slate-900">Customers &amp; Users</h4>
+                  <span className="bg-purple-100 text-purple-800 text-[9px] font-bold px-1.5 py-0.5 rounded">Excel CSV</span>
+                </div>
+                <p className="text-[11px] text-slate-500 mt-0.5 truncate">
+                  Customer full names, verified emails, phone numbers &amp; order count
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => handleDownload('users', 'Healora_Customers.csv')}
+              disabled={Boolean(downloading)}
+              className="flex-shrink-0 flex items-center gap-1.5 bg-purple-700 hover:bg-purple-800 text-white font-bold text-xs px-3.5 py-2 rounded-xl transition shadow-sm"
+            >
+              {downloading === 'users' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
+              <span>Download</span>
+            </button>
+          </div>
+
+          {/* Card 4: Inquiries */}
+          <div className="flex items-center justify-between p-4 rounded-2xl border border-slate-200 hover:border-amber-300 hover:bg-amber-50/30 transition gap-3">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-9 h-9 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center flex-shrink-0">
+                <MessageSquare className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <div className="flex items-center gap-2">
+                  <h4 className="text-xs font-extrabold text-slate-900">Customer Inquiries</h4>
+                  <span className="bg-amber-100 text-amber-800 text-[9px] font-bold px-1.5 py-0.5 rounded">Excel CSV</span>
+                </div>
+                <p className="text-[11px] text-slate-500 mt-0.5 truncate">
+                  Contact messages, inquiries, phone numbers &amp; resolution status
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => handleDownload('inquiries', 'Healora_Inquiries.csv')}
+              disabled={Boolean(downloading)}
+              className="flex-shrink-0 flex items-center gap-1.5 bg-amber-700 hover:bg-amber-800 text-white font-bold text-xs px-3.5 py-2 rounded-xl transition shadow-sm"
+            >
+              {downloading === 'inquiries' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
+              <span>Download</span>
+            </button>
+          </div>
+
+          {/* Card 5: Full Database Backup JSON */}
+          <div className="flex items-center justify-between p-4 rounded-2xl border-2 border-dashed border-slate-300 bg-slate-50 hover:bg-slate-100 transition gap-3 mt-4">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-9 h-9 rounded-xl bg-slate-200 text-slate-700 flex items-center justify-center flex-shrink-0">
+                <Database className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <div className="flex items-center gap-2">
+                  <h4 className="text-xs font-extrabold text-slate-900">Complete Database Backup</h4>
+                  <span className="bg-slate-200 text-slate-800 text-[9px] font-bold px-1.5 py-0.5 rounded">JSON</span>
+                </div>
+                <p className="text-[11px] text-slate-500 mt-0.5 truncate">
+                  All categories, products, users, orders &amp; inquiries in one JSON file
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => handleDownload('json', 'Healora_Full_Database_Backup.json')}
+              disabled={Boolean(downloading)}
+              className="flex-shrink-0 flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs px-3.5 py-2 rounded-xl transition shadow-sm"
+            >
+              {downloading === 'json' ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Download className="w-3.5 h-3.5" />}
+              <span>Backup JSON</span>
+            </button>
+          </div>
+        </div>
+
+        <div className="mt-6 pt-4 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+          <span>💡 Download hone wali CSV file seedhe <strong>Microsoft Excel</strong> me khul jayegi.</span>
+          <button
+            onClick={onClose}
+            className="text-slate-600 hover:text-slate-900 font-bold px-3 py-1.5 rounded-lg hover:bg-slate-100 transition self-end sm:self-auto"
+          >
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 // Main Admin Console Component
 function AdminConsole() {
@@ -46,6 +231,7 @@ function AdminConsole() {
   // Tab State: 'dashboard' | 'products' | 'orders' | 'users' | 'inquiries'
   const initialTab = (searchParams.get('tab') as 'dashboard' | 'products' | 'orders' | 'users' | 'inquiries') || 'dashboard';
   const [activeTab, setActiveTab] = useState<'dashboard' | 'products' | 'orders' | 'users' | 'inquiries'>(initialTab);
+  const [showExportModal, setShowExportModal] = useState(false);
 
 
   // Sync tab with URL without page reload
@@ -159,6 +345,20 @@ function AdminConsole() {
               <MessageSquare className="w-4 h-4 text-emerald-400" />
               <span>Customer Inquiries</span>
             </button>
+
+            {/* 6. EXPORT ALL DATA (EXCEL / CSV) */}
+            <div className="pt-2">
+              <button
+                onClick={() => setShowExportModal(true)}
+                className="w-full flex items-center justify-between px-3.5 py-2.5 bg-gradient-to-r from-emerald-950/80 to-teal-950/80 hover:from-emerald-900 hover:to-teal-900 border border-emerald-500/40 text-emerald-300 hover:text-white rounded-xl transition font-bold text-xs shadow-md group"
+              >
+                <span className="flex items-center gap-2.5">
+                  <FileSpreadsheet className="w-4 h-4 text-emerald-400 group-hover:scale-110 transition" />
+                  <span>Export Data (Excel)</span>
+                </span>
+                <Download className="w-3.5 h-3.5 text-emerald-400" />
+              </button>
+            </div>
           </nav>
         </div>
 
@@ -188,12 +388,22 @@ function AdminConsole() {
       {/* ================= DYNAMIC MAIN CONTENT PANEL ================= */}
       {/* Only this panel switches when a button is clicked — no page reload! */}
       <main className="flex-1 p-6 md:p-8 max-w-7xl mx-auto w-full overflow-y-auto">
-        {activeTab === 'dashboard' && <AdminDashboardPanel onNavigateTab={handleTabChange} />}
-        {activeTab === 'products' && <AdminProductsPanel />}
+        {activeTab === 'dashboard' && (
+          <AdminDashboardPanel
+            onNavigateTab={handleTabChange}
+            onOpenExportModal={() => setShowExportModal(true)}
+          />
+        )}
+        {activeTab === 'products' && (
+          <AdminProductsPanel onOpenExportModal={() => setShowExportModal(true)} />
+        )}
         {activeTab === 'orders' && <AdminOrdersPanel />}
         {activeTab === 'users' && <AdminUsersPanel />}
         {activeTab === 'inquiries' && <AdminInquiriesPanel />}
       </main>
+
+      {/* Export Data Modal */}
+      {showExportModal && <ExportDataModal onClose={() => setShowExportModal(false)} />}
     </div>
   );
 }
@@ -201,7 +411,7 @@ function AdminConsole() {
 // =========================================================================
 // 1. PRODUCTS & DISCOUNTS MANAGEMENT PANEL
 // =========================================================================
-function AdminProductsPanel() {
+function AdminProductsPanel({ onOpenExportModal }: { onOpenExportModal?: () => void }) {
   const [products, setProducts] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -649,12 +859,23 @@ function AdminProductsPanel() {
           </p>
         </div>
 
-        <button
-          onClick={openAddModal}
-          className="bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs py-2.5 px-4 rounded-xl shadow-sm transition self-start sm:self-auto cursor-pointer"
-        >
-          Add Product
-        </button>
+        <div className="flex items-center gap-2 self-start sm:self-auto">
+          {onOpenExportModal && (
+            <button
+              onClick={onOpenExportModal}
+              className="inline-flex items-center gap-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-300 font-bold text-xs py-2.5 px-3.5 rounded-xl shadow-sm transition cursor-pointer"
+            >
+              <FileSpreadsheet className="w-4 h-4 text-emerald-600" />
+              <span>Export (Excel)</span>
+            </button>
+          )}
+          <button
+            onClick={openAddModal}
+            className="bg-teal-700 hover:bg-teal-800 text-white font-bold text-xs py-2.5 px-4 rounded-xl shadow-sm transition cursor-pointer"
+          >
+            Add Product
+          </button>
+        </div>
       </div>
 
       {/* Stats bar */}
@@ -2115,7 +2336,13 @@ function AdminOrdersPanel() {
 // =========================================================================
 // 3. OVERVIEW DASHBOARD PANEL
 // =========================================================================
-function AdminDashboardPanel({ onNavigateTab }: { onNavigateTab: (tab: 'products' | 'orders' | 'dashboard') => void }) {
+function AdminDashboardPanel({
+  onNavigateTab,
+  onOpenExportModal,
+}: {
+  onNavigateTab: (tab: 'products' | 'orders' | 'dashboard') => void;
+  onOpenExportModal?: () => void;
+}) {
   const [data, setData] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -2144,14 +2371,26 @@ function AdminDashboardPanel({ onNavigateTab }: { onNavigateTab: (tab: 'products
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2">
-          <LayoutDashboard className="w-7 h-7 text-teal-700" />
-          Website Admin &amp; Operations Dashboard
-        </h1>
-        <p className="text-xs text-slate-500 mt-0.5">
-          Monitor real-time customer orders, catalog inventory, revenue, and fulfillment.
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-extrabold text-slate-900 flex items-center gap-2">
+            <LayoutDashboard className="w-7 h-7 text-teal-700" />
+            Website Admin &amp; Operations Dashboard
+          </h1>
+          <p className="text-xs text-slate-500 mt-0.5">
+            Monitor real-time customer orders, catalog inventory, revenue, and fulfillment.
+          </p>
+        </div>
+
+        {onOpenExportModal && (
+          <button
+            onClick={onOpenExportModal}
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-emerald-700 to-teal-700 hover:from-emerald-800 hover:to-teal-800 text-white font-bold text-xs py-2.5 px-4 rounded-xl shadow-md transition self-start sm:self-auto cursor-pointer"
+          >
+            <FileSpreadsheet className="w-4 h-4 text-emerald-200" />
+            <span>Export Data (Excel)</span>
+          </button>
+        )}
       </div>
 
       {/* Metric Cards */}
