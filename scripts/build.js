@@ -14,12 +14,7 @@ execSync('npx prisma generate', { stdio: 'inherit', env: process.env });
 console.log('>>> [Build Step 2/3] Syncing database schema with prisma db push...');
 execSync('npx prisma db push --accept-data-loss', { stdio: 'inherit', env: process.env });
 
-console.log('>>> [Build Step 2.5/3] Seeding clinical products and demo users into database...');
-try {
-  execSync('node prisma/seed.js', { stdio: 'inherit', env: process.env });
-} catch (err) {
-  console.warn('Note: Seed step finished or skipped:', err.message);
-}
+// Seeding step removed so dummy products do not get re-inserted on build
 
 console.log('>>> [Build Step 3/3] Compiling Next.js production build...');
 execSync('npx next build', { stdio: 'inherit', env: process.env });
