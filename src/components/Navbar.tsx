@@ -93,39 +93,40 @@ export default function Navbar({ onOpenUploadModal }: { onOpenUploadModal?: () =
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
+    <header className="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm w-full">
       {/* Top Bar */}
-      <div className="bg-slate-900 text-slate-300 text-xs py-1.5 px-4">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-1">
-          <div className="flex items-center gap-2">
-            <span className="bg-teal-600 text-white font-semibold px-2 py-0.5 rounded text-[10px]">Authentic Products</span>
-            <span className="hidden md:inline text-slate-400">Shop with confidence &amp; complete peace of mind</span>
-            <span className="text-teal-400 font-medium">100% GENUINE PRODUCTS</span>
+      <div className="bg-slate-900 text-slate-300 text-xs py-1.5 px-3 sm:px-4">
+        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-1 text-center sm:text-left">
+          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-1.5 sm:gap-2">
+            <span className="bg-teal-600 text-white font-semibold px-2 py-0.5 rounded text-[10px]">Authentic</span>
+            <span className="text-teal-400 font-semibold text-[11px] sm:text-xs">100% GENUINE PRODUCTS</span>
+            <span className="hidden md:inline text-slate-400">• Shop with confidence</span>
           </div>
-          <div className="flex items-center gap-4 text-[11px]">
-            <span className="flex items-center gap-1 text-amber-400"><AlertTriangle className="w-3.5 h-3.5" />Exclusive Deals &amp; Special Offers</span>
-            <Link href="/support/delivery" className="hover:text-white transition">Fast &amp; Secure Delivery</Link>
+          <div className="flex items-center justify-center gap-3 sm:gap-4 text-[10px] sm:text-[11px]">
+            <span className="flex items-center gap-1 text-amber-400"><AlertTriangle className="w-3.5 h-3.5" />Exclusive Deals</span>
+            <span className="text-slate-600 hidden sm:inline">•</span>
+            <Link href="/support/delivery" className="hover:text-white transition">Fast Delivery</Link>
           </div>
         </div>
       </div>
 
       {/* Main Navbar */}
-      <div className="max-w-7xl mx-auto px-4 py-3">
-        <div className="flex items-center justify-between gap-4">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 py-2.5 sm:py-3">
+        <div className="flex items-center justify-between gap-2 sm:gap-4">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2.5 flex-shrink-0 group">
+          <Link href="/" className="flex items-center gap-2 sm:gap-2.5 flex-shrink-0 group min-w-0">
             <img
               src="/logo.png"
               alt="Healora HealthCare"
-              className="w-10 h-10 object-contain group-hover:scale-105 transition-transform"
+              className="w-8 h-8 sm:w-10 sm:h-10 object-contain group-hover:scale-105 transition-transform flex-shrink-0"
             />
-            <div>
-              <div className="font-extrabold text-xl tracking-tight text-slate-900 leading-none">Healora<span className="text-teal-700">HealthCare</span></div>
-              <div className="text-[10px] tracking-wider text-slate-500 font-semibold uppercase mt-0.5">YOUR TRUSTED HEALTH STORE</div>
+            <div className="min-w-0">
+              <div className="font-extrabold text-base sm:text-xl tracking-tight text-slate-900 leading-none">Healora<span className="text-teal-700">HealthCare</span></div>
+              <div className="text-[9px] sm:text-[10px] tracking-wider text-slate-500 font-semibold uppercase mt-0.5 truncate">YOUR TRUSTED HEALTH STORE</div>
             </div>
           </Link>
 
-          {/* Search */}
+          {/* Search (Tablet / Desktop) */}
           <div className="flex-1 max-w-xl relative hidden sm:block" ref={searchRef}>
             <form onSubmit={handleSearchSubmit} className="relative">
               <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
@@ -156,7 +157,7 @@ export default function Navbar({ onOpenUploadModal }: { onOpenUploadModal?: () =
           </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
             <Link
               href="/cart"
               onClick={(e) => {
@@ -267,13 +268,54 @@ export default function Navbar({ onOpenUploadModal }: { onOpenUploadModal?: () =
                 )}
               </div>
             ) : (
-              <Link href="/auth/login" className="bg-teal-700 hover:bg-teal-800 text-white text-xs font-semibold px-4 py-2 rounded-lg transition shadow-sm">Sign In</Link>
+              <Link href="/auth/login" className="bg-teal-700 hover:bg-teal-800 text-white text-xs font-semibold px-3 sm:px-4 py-2 rounded-lg transition shadow-sm whitespace-nowrap">Sign In</Link>
             )}
           </div>
         </div>
 
-        {/* ── Inline Category Nav Bar — always visible, no dropdown ── */}
-        <nav className="mt-3 pt-2.5 border-t border-slate-100 overflow-x-auto no-scrollbar">
+        {/* Mobile Search Bar (Phone screens) */}
+        <div className="mt-2.5 block sm:hidden relative">
+          <form onSubmit={handleSearchSubmit} className="relative">
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
+              placeholder="Search medicines, salts..."
+              className="w-full bg-slate-100 border border-slate-200 focus:border-teal-500 focus:bg-white text-slate-900 text-xs rounded-full pl-9 pr-20 py-2 outline-none transition"
+            />
+            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-2.5" />
+            <button
+              type="submit"
+              className="absolute right-1 top-1 bg-teal-700 hover:bg-teal-800 text-white text-[11px] font-semibold px-3 py-1 rounded-full transition"
+            >
+              Search
+            </button>
+          </form>
+          {showSuggestions && suggestions.length > 0 && (
+            <div className="absolute top-full left-0 right-0 mt-1.5 bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden z-50">
+              <div className="divide-y divide-slate-100">
+                {suggestions.map((p) => (
+                  <Link
+                    key={p.id}
+                    href={`/product/${p.slug}`}
+                    onClick={() => setShowSuggestions(false)}
+                    className="p-2.5 hover:bg-teal-50 flex items-center justify-between transition group"
+                  >
+                    <div className="min-w-0 pr-2">
+                      <div className="text-xs font-semibold text-slate-900 group-hover:text-teal-700 truncate">{p.name}</div>
+                      <div className="text-[10px] text-slate-500 truncate">{p.strength}</div>
+                    </div>
+                    <div className="text-xs font-bold text-slate-900 flex-shrink-0">Rs.{(p.sellingPrice / 100).toFixed(2)}</div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* ── Inline Category Nav Bar — always visible, horizontal touch scroll ── */}
+        <nav className="mt-2.5 sm:mt-3 pt-2 sm:pt-2.5 border-t border-slate-100 w-full max-w-full overflow-x-auto no-scrollbar touch-pan-x">
           <div className="flex items-center gap-0 min-w-max">
             {CATEGORIES.map((cat, catIdx) => (
               <React.Fragment key={cat.slug}>

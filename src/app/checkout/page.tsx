@@ -97,13 +97,19 @@ export default function CheckoutPage() {
   // Handle Save New Address
   const handleSaveAddress = async (e: React.FormEvent) => {
     e.preventDefault();
+    const targetPhone = (newPhone || user?.phone || '').trim().replace(/[^0-9]/g, '');
+    if (!targetPhone || targetPhone.length < 10) {
+      alert('Please enter a valid 10-digit mobile number for delivery contact.');
+      return;
+    }
+
     try {
       const res = await fetch('/api/addresses', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           recipientName: newRecipientName || user?.fullName,
-          phone: newPhone || user?.phone,
+          phone: targetPhone,
           addressLine1: newAddress1,
           city: newCity,
           state: newState,

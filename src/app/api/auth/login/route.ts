@@ -10,12 +10,17 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Email or phone number is required' }, { status: 400 });
     }
 
+    const cleanInput = String(emailOrPhone || '').trim().toLowerCase();
+    if (cleanInput.includes('@') && (!cleanInput.endsWith('@gmail.com') || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanInput))) {
+      return NextResponse.json({ error: 'Please enter a valid Gmail address ending with @gmail.com' }, { status: 400 });
+    }
+
     // Find user by email or phone
     const user = await prisma.user.findFirst({
       where: {
         OR: [
-          { email: emailOrPhone.toLowerCase() },
-          { phone: emailOrPhone },
+          { email: cleanInput },
+          { phone: cleanInput },
         ],
       },
     });

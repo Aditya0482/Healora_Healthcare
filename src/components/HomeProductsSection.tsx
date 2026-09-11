@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import ProductCard from '@/components/ProductCard';
-import { ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
+import { ChevronDown, ChevronUp, Sparkles, PackageOpen } from 'lucide-react';
 
 interface Product {
   id: string;
@@ -48,15 +48,15 @@ export default function HomeProductsSection({ initialProducts }: HomeProductsSec
   const hasMore = filteredProducts.length > INITIAL_COUNT;
 
   return (
-    <section id="products-section" className="max-w-7xl mx-auto px-4">
+    <section id="products-section" className="max-w-7xl mx-auto px-3 sm:px-4">
       {/* Section Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4 border-b border-slate-200 pb-6">
+      <div className="flex flex-col md:flex-row md:items-end justify-between mb-6 sm:mb-8 gap-4 border-b border-slate-200 pb-5 sm:pb-6">
         <div>
           <div className="inline-flex items-center gap-1.5 bg-teal-50 border border-teal-200 text-teal-800 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-2">
             <Sparkles className="w-3.5 h-3.5 text-teal-600" />
             Specialized Health &amp; Wellness
           </div>
-          <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+          <h2 className="text-xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
             Our Products
           </h2>
           <p className="text-xs sm:text-sm text-slate-500 mt-1.5 max-w-2xl">
@@ -65,13 +65,13 @@ export default function HomeProductsSection({ initialProducts }: HomeProductsSec
         </div>
 
         {/* Category Filter Tabs */}
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
           <button
             onClick={() => {
               setSelectedCategory('all');
               setShowAll(false);
             }}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm ${
+            className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs font-bold transition shadow-sm ${
               selectedCategory === 'all'
                 ? 'bg-teal-700 text-white shadow-teal-700/20'
                 : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
@@ -84,7 +84,7 @@ export default function HomeProductsSection({ initialProducts }: HomeProductsSec
               setSelectedCategory('cirrhosis-liver-care');
               setShowAll(false);
             }}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm ${
+            className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs font-bold transition shadow-sm ${
               selectedCategory === 'cirrhosis-liver-care'
                 ? 'bg-amber-600 text-white shadow-amber-600/20'
                 : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
@@ -97,7 +97,7 @@ export default function HomeProductsSection({ initialProducts }: HomeProductsSec
               setSelectedCategory('diabetes-care');
               setShowAll(false);
             }}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm ${
+            className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs font-bold transition shadow-sm ${
               selectedCategory === 'diabetes-care'
                 ? 'bg-blue-600 text-white shadow-blue-600/20'
                 : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
@@ -110,7 +110,7 @@ export default function HomeProductsSection({ initialProducts }: HomeProductsSec
               setSelectedCategory('intimate-care');
               setShowAll(false);
             }}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition shadow-sm ${
+            className={`px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs font-bold transition shadow-sm ${
               selectedCategory === 'intimate-care'
                 ? 'bg-rose-600 text-white shadow-rose-600/20'
                 : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
@@ -123,14 +123,28 @@ export default function HomeProductsSection({ initialProducts }: HomeProductsSec
 
       {/* Products Grid */}
       {displayedProducts.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
           {displayedProducts.map((product) => (
             <ProductCard key={product.id} product={product} />
           ))}
         </div>
       ) : (
-        <div className="text-center py-12 bg-slate-50 rounded-2xl border border-slate-200">
-          <p className="text-slate-500 text-sm font-medium">No products found in this category.</p>
+        <div className="text-center py-16 px-6 bg-gradient-to-b from-slate-50 to-white rounded-3xl border border-dashed border-slate-300 max-w-2xl mx-auto shadow-sm">
+          <div className="w-16 h-16 bg-teal-50 text-teal-700 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-teal-100 shadow-sm">
+            <PackageOpen className="w-8 h-8" />
+          </div>
+          <h3 className="text-lg sm:text-xl font-extrabold text-slate-900">
+            {selectedCategory === 'all'
+              ? 'No Products Available in Store'
+              : selectedCategory === 'cirrhosis-liver-care'
+              ? 'No Cirrhosis & Liver Care Products Available'
+              : selectedCategory === 'intimate-care'
+              ? 'No Intimate Care Products Available'
+              : 'No Products Found in this Category'}
+          </h3>
+          <p className="text-xs sm:text-sm text-slate-500 mt-2 max-w-md mx-auto leading-relaxed">
+            There are currently no products listed in this section. New products will be added and updated soon. Please check back later!
+          </p>
         </div>
       )}
 

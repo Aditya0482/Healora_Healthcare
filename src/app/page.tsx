@@ -61,57 +61,57 @@ export default async function HomePage() {
   const products = await getHomeProducts();
 
   return (
-    <div className="space-y-16 pb-16">
+    <div className="space-y-12 sm:space-y-16 pb-16">
       {/* 1. Hero Section */}
-      <section className="relative bg-gradient-to-b from-teal-900 via-teal-950 to-slate-900 text-white pt-16 pb-24 px-4 overflow-hidden">
+      <section className="relative bg-gradient-to-b from-teal-900 via-teal-950 to-slate-900 text-white pt-10 sm:pt-16 pb-16 sm:pb-24 px-3 sm:px-4 overflow-hidden w-full">
         {/* Subtle background glow */}
-        <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-teal-500/20 blur-[120px] rounded-full pointer-events-none" />
+        <div className="absolute -top-24 left-1/2 -translate-x-1/2 w-[90vw] max-w-[700px] h-[250px] sm:h-[350px] bg-teal-500/20 blur-[100px] sm:blur-[120px] rounded-full pointer-events-none" />
 
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            <div className="lg:col-span-7 space-y-6">
-              <div className="inline-flex items-center gap-2 bg-teal-800/60 border border-teal-600/40 rounded-full px-4 py-1.5 text-xs text-teal-300 font-semibold shadow-inner">
+        <div className="max-w-7xl mx-auto relative z-10 w-full">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+            <div className="lg:col-span-7 space-y-5 sm:space-y-6">
+              <div className="inline-flex items-center gap-2 bg-teal-800/60 border border-teal-600/40 rounded-full px-3.5 sm:px-4 py-1.5 text-[11px] sm:text-xs text-teal-300 font-semibold shadow-inner">
                 <Sparkles className="w-3.5 h-3.5 text-teal-400" />
                 Specialized Health &amp; Wellness Store
               </div>
 
-              <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight">
+              <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white leading-tight break-words">
                 Ayurvedic &amp; wellness for <br className="hidden sm:inline" />
                 <span className="text-teal-400">Cirrhosis</span> &amp; <span className="text-cyan-400">Intimate</span> Care.
               </h1>
 
-              <p className="text-slate-300 text-sm sm:text-base max-w-xl leading-relaxed">
+              <p className="text-slate-300 text-xs sm:text-base max-w-xl leading-relaxed">
                 Explore our specialized range of Cirrhosis Care and Intimate Wellness products, thoughtfully selected to support your everyday health, comfort, and personal well-being. 
                 Shop trusted products with convenience, privacy, and care.
               </p>
 
               {/* Action Buttons */}
-              <div className="flex flex-wrap items-center gap-4 pt-2">
+              <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3 sm:gap-4 pt-1 sm:pt-2">
                 <Link
                   href="/category/cirrhosis-liver-care"
-                  className="bg-teal-600 hover:bg-teal-700 text-white font-bold px-6 py-3.5 rounded-xl text-sm transition shadow-lg shadow-teal-600/30 flex items-center gap-2 whitespace-nowrap"
+                  className="bg-teal-600 hover:bg-teal-700 text-white font-bold px-5 sm:px-6 py-3 sm:py-3.5 rounded-xl text-xs sm:text-sm transition shadow-lg shadow-teal-600/30 flex items-center justify-center gap-2 text-center"
                 >
-                  <HeartPulse className="w-4 h-4 text-amber-300" />
-                  Explore Cirrhosis Products
+                  <HeartPulse className="w-4 h-4 text-amber-300 flex-shrink-0" />
+                  <span>Explore Cirrhosis Products</span>
                 </Link>
                 <Link
                   href="/category/intimate-care"
-                  className="bg-rose-600 hover:bg-rose-700 text-white font-bold px-6 py-3.5 rounded-xl text-sm transition shadow-lg shadow-rose-600/30 flex items-center gap-2 whitespace-nowrap"
+                  className="bg-rose-600 hover:bg-rose-700 text-white font-bold px-5 sm:px-6 py-3 sm:py-3.5 rounded-xl text-xs sm:text-sm transition shadow-lg shadow-rose-600/30 flex items-center justify-center gap-2 text-center"
                 >
-                  <Sparkles className="w-4 h-4 text-rose-200" />
-                  Explore Intimate Products
+                  <Sparkles className="w-4 h-4 text-rose-200 flex-shrink-0" />
+                  <span>Explore Intimate Products</span>
                 </Link>
                 <Link
                   href="/cart"
-                  className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold px-5 py-3.5 rounded-xl text-sm transition shadow-lg shadow-amber-500/20 flex items-center gap-2 whitespace-nowrap"
+                  className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-extrabold px-5 sm:px-6 py-3 sm:py-3.5 rounded-xl text-xs sm:text-sm transition shadow-lg shadow-amber-500/20 flex items-center justify-center gap-2 text-center"
                 >
-                  <ShoppingCart className="w-4 h-4 text-slate-950" />
-                  View Your Cart
+                  <ShoppingCart className="w-4 h-4 text-slate-950 flex-shrink-0" />
+                  <span>View Your Cart</span>
                 </Link>
               </div>
 
               {/* Assurance Bullets */}
-              <div className="pt-6 border-t border-slate-800 grid grid-cols-3 gap-4 text-xs text-slate-400">
+              <div className="pt-5 sm:pt-6 border-t border-slate-800 grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-4 text-xs text-slate-400">
                 <div className="flex items-center gap-2">
                   <ShieldCheck className="w-4 h-4 text-teal-400 flex-shrink-0" />
                   <span>Quality Products</span>
@@ -129,7 +129,7 @@ export default async function HomePage() {
 
             {/* Hero Quick Card Showcase */}
             <div className="lg:col-span-5">
-              <div className="bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl p-6 shadow-2xl text-white space-y-4">
+              <div className="bg-white/10 backdrop-blur-md border border-white/15 rounded-2xl p-4 sm:p-6 shadow-2xl text-white space-y-4">
                 <div className="flex items-center justify-between pb-3 border-b border-white/10">
                   <div className="text-xs font-bold uppercase tracking-wider text-teal-300">How It Works</div>
                   <span className="text-[11px] bg-white/20 px-2 py-0.5 rounded text-white font-mono">3 Simple Steps</span>
@@ -185,15 +185,15 @@ export default async function HomePage() {
       <HomeProductsSection initialProducts={products} />
 
       {/* 4. Cold-Chain Logistics Assurance Banner */}
-      <section className="max-w-7xl mx-auto px-4">
-        <div className="bg-gradient-to-r from-sky-900 to-teal-900 rounded-2xl text-white p-8 md:p-10 shadow-xl relative overflow-hidden">
-          <div className="max-w-2xl space-y-4 relative z-10">
+      <section className="max-w-7xl mx-auto px-3 sm:px-4">
+        <div className="bg-gradient-to-r from-sky-900 to-teal-900 rounded-2xl text-white p-5 sm:p-8 md:p-10 shadow-xl relative overflow-hidden">
+          <div className="max-w-2xl space-y-3 sm:space-y-4 relative z-10">
             <div className="inline-flex items-center gap-1.5 bg-sky-500/30 text-sky-200 text-xs font-bold px-3 py-1 rounded-full border border-sky-400/30">
               <Snowflake className="w-3.5 h-3.5 text-sky-300" />
               Trusted Shopping Experience
             </div>
-            <h3 className="text-2xl font-extrabold text-white">
-              Shop Genuine Health & Wellness Products
+            <h3 className="text-xl sm:text-2xl font-extrabold text-white">
+              Shop Genuine Health &amp; Wellness Products
             </h3>
             <p className="text-xs sm:text-sm text-sky-100 leading-relaxed">
               We carefully select and securely pack every product to ensure you receive quality healthcare and wellness products in perfect condition.

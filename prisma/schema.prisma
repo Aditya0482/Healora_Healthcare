@@ -259,3 +259,15 @@ model AuditLog {
 
   user User? @relation(fields: [userId], references: [id])
 }
+
+model ContactInquiry {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  phone     String
+  subject   String?
+  message   String
+  status    String   @default("UNREAD") // UNREAD, RESOLVED
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import bcrypt from 'bcryptjs';
+import { sendOtpEmail } from '@/lib/mail';
 
 // In-memory OTP storage: email -> { otp: string, expiresAt: number, attempts: number }
 interface OtpRecord {
@@ -22,6 +23,12 @@ export async function POST(req: NextRequest) {
     }
 
     const trimmedEmail = email.trim().toLowerCase();
+    if (!trimmedEmail.endsWith('@gmail.com') || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail)) {
+      return NextResponse.json(
+        { error: 'Please enter a valid Gmail address ending with @gmail.com' },
+        { status: 400 }
+      );
+    }
 
     // Look for user by email (Customer or Admin)
     const user = await prisma.user.findFirst({
@@ -56,9 +63,20 @@ export async function POST(req: NextRequest) {
         attempts: 0,
       });
 
+      // Dispatch real email via Resend
+      const mailResult = await sendOtpEmail({
+        to: trimmedEmail,
+        name: user.fullName,
+        otp: dynamicOtp,
+      });
+
       return NextResponse.json({
         success: true,
-        message: `OTP generate ho gaya hai! Verification code: ${dynamicOtp}`,
+        otp: dynamicOtp,
+        emailSent: mailResult.success,
+        message: mailResult.success
+          ? `Verification OTP sent to ${trimmedEmail}!`
+          : `OTP generated! Verification code: ${dynamicOtp}`,
         userRole: user.role === 'SUPER_ADMIN' ? 'Admin' : 'Customer',
       });
     }

@@ -12,6 +12,8 @@ import {
   ShoppingCart,
   ArrowLeft,
   CheckCircle2,
+  Eye,
+  EyeOff,
 } from 'lucide-react';
 
 function LoginForm() {
@@ -26,14 +28,18 @@ function LoginForm() {
   // Regular Email & Password Login States
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [fieldErrors, setFieldErrors] = useState<{ email?: string; password?: string }>({});
 
   // Forgot Password States (Email only)
   const [fpEmail, setFpEmail] = useState('');
   const [fpOtp, setFpOtp] = useState('');
   const [fpNewPassword, setFpNewPassword] = useState('');
   const [fpConfirmPassword, setFpConfirmPassword] = useState('');
+  const [showFpNewPassword, setShowFpNewPassword] = useState(false);
+  const [showFpConfirmPassword, setShowFpConfirmPassword] = useState(false);
   const [fpStep, setFpStep] = useState<'INPUT' | 'VERIFY'>('INPUT');
   const [fpLoading, setFpLoading] = useState(false);
   const [fpError, setFpError] = useState('');
@@ -42,10 +48,32 @@ function LoginForm() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    const newErrors: { email?: string; password?: string } = {};
+
+    const trimmedEmail = email.trim().toLowerCase();
+    if (!trimmedEmail) {
+      newErrors.email = 'Please enter your email address.';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedEmail) || !trimmedEmail.endsWith('@gmail.com')) {
+      newErrors.email = 'Please enter a valid Gmail address (must end with @gmail.com).';
+    }
+
+    if (!password) {
+      newErrors.password = 'Please enter your password.';
+    } else if (password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters.';
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setFieldErrors(newErrors);
+      setError('Please fill in the required fields correctly.');
+      return;
+    }
+
+    setFieldErrors({});
     setLoading(true);
 
     const res = await login({
-      emailOrPhone: email.trim(),
+      emailOrPhone: trimmedEmail,
       password,
     });
 
@@ -53,7 +81,11 @@ function LoginForm() {
     if (res.success) {
       router.push(redirectUrl);
     } else {
-      setError(res.error || 'Authentication failed. Please check your email and password.');
+      setError(res.error || 'Incorrect email or password. Please check your credentials and try again.');
+      setFieldErrors({
+        email: 'Check this email address',
+        password: 'Or verify your password',
+      });
     }
   };
 
@@ -63,8 +95,14 @@ function LoginForm() {
     setFpError('');
     setFpSuccess('');
 
-    if (!fpEmail.trim()) {
-      setFpError('Kripya apna registered Email enter karein');
+    const trimmedFpEmail = fpEmail.trim().toLowerCase();
+    if (!trimmedFpEmail) {
+      setFpError('Please enter your registered Gmail address.');
+      return;
+    }
+
+    if (!trimmedFpEmail.endsWith('@gmail.com') || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmedFpEmail)) {
+      setFpError('Please enter a valid Gmail address (must end with @gmail.com).');
       return;
     }
 
@@ -78,14 +116,20 @@ function LoginForm() {
 
       const data = await res.json();
       if (res.ok) {
-        setFpSuccess('OTP aapke email par bhej diya gaya hai! (Verification code: 123456)');
-        setFpOtp('123456'); // Pre-fill test code for convenience
+        const receivedOtp = data.otp;
+        if (data.emailSent) {
+          setFpSuccess('Verification OTP has been sent to your email! Please check your inbox / spam folder.');
+          setFpOtp('');
+        } else {
+          setFpSuccess(`OTP generated successfully! (Verification code: ${receivedOtp})`);
+          setFpOtp(receivedOtp || '');
+        }
         setFpStep('VERIFY');
       } else {
-        setFpError(data.error || 'Is email se account nahi mila.');
+        setFpError(data.error || 'This email is not registered.');
       }
     } catch {
-      setFpError('Server se connect nahi ho paya. Kripya punah prayas karein.');
+      setFpError('Does not connect to server.Please try again.');
     } finally {
       setFpLoading(false);
     }
@@ -98,17 +142,17 @@ function LoginForm() {
     setFpSuccess('');
 
     if (!fpOtp) {
-      setFpError('Kripya 6-digit OTP enter karein');
+      setFpError('Please enter 6 digit OTP....');
       return;
     }
 
     if (fpNewPassword.length < 6) {
-      setFpError('Naya password kam se kam 6 characters ka hona chahiye');
+      setFpError('New password should be minimum 6 characters');
       return;
     }
 
     if (fpNewPassword !== fpConfirmPassword) {
-      setFpError('New password aur Confirm password match nahi ho rahe hain');
+      setFpError('New password and old passeword does not match');
       return;
     }
 
@@ -128,7 +172,7 @@ function LoginForm() {
 
       const data = await res.json();
       if (res.ok) {
-        setFpSuccess('✓ Password safalta-purvak reset ho gaya hai!');
+        setFpSuccess('✓ Password reset successfully....!');
         setTimeout(() => {
           setIsForgotPassword(false);
           setEmail(fpEmail);
@@ -136,10 +180,10 @@ function LoginForm() {
           setFpError('');
         }, 1500);
       } else {
-        setFpError(data.error || 'Password reset karne me samasya aayi.');
+        setFpError(data.error || 'Some error during reset password.');
       }
     } catch {
-      setFpError('Server error aayi. Kripya punah prayas karein.');
+      setFpError('Server error. Please retry.');
     } finally {
       setFpLoading(false);
     }
@@ -159,8 +203,8 @@ function LoginForm() {
         </h1>
         <p className="text-xs text-slate-500">
           {isForgotPassword
-            ? 'Enter email to reset your password.'
-            : 'Access your medications, account, and order tracking.'}
+            ? ''
+            : 'Access your products, account and order tracking.'}
         </p>
       </div>
 
@@ -199,7 +243,7 @@ function LoginForm() {
                   required
                   value={fpEmail}
                   onChange={(e) => setFpEmail(e.target.value)}
-                  placeholder="e.g. admin@medicare.com or patient@example.com"
+                  placeholder="e.g demo@gmail.com"
                   className="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-slate-900 outline-none focus:border-teal-700 text-xs font-medium"
                 />
                 <p className="text-[11px] text-slate-500 mt-1 font-medium">
@@ -219,7 +263,7 @@ function LoginForm() {
             <form onSubmit={handleFpReset} className="space-y-3.5">
               <div>
                 <label className="font-bold text-slate-700 block mb-1">
-                  Enter 6-Digit OTP <span className="text-teal-700 font-semibold">(Verification code: 123456)</span>
+                  Enter 6-Digit OTP <span className="text-teal-700 font-semibold">(Sent to your email)</span>
                 </label>
                 <input
                   type="text"
@@ -235,28 +279,48 @@ function LoginForm() {
                 <label className="font-bold text-slate-700 block mb-1">
                   New Password <span className="text-rose-500">*</span>
                 </label>
-                <input
-                  type="password"
-                  required
-                  placeholder="Min 6 characters"
-                  value={fpNewPassword}
-                  onChange={(e) => setFpNewPassword(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-slate-900 outline-none focus:border-teal-700"
-                />
+                <div className="relative">
+                  <input
+                    type={showFpNewPassword ? 'text' : 'password'}
+                    required
+                    placeholder="Min 6 characters"
+                    value={fpNewPassword}
+                    onChange={(e) => setFpNewPassword(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 pr-10 text-slate-900 outline-none focus:border-teal-700"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowFpNewPassword(!showFpNewPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition focus:outline-none p-1 cursor-pointer"
+                    aria-label={showFpNewPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showFpNewPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
               </div>
 
               <div>
                 <label className="font-bold text-slate-700 block mb-1">
                   Confirm New Password <span className="text-rose-500">*</span>
                 </label>
-                <input
-                  type="password"
-                  required
-                  placeholder="Re-enter new password"
-                  value={fpConfirmPassword}
-                  onChange={(e) => setFpConfirmPassword(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 text-slate-900 outline-none focus:border-teal-700"
-                />
+                <div className="relative">
+                  <input
+                    type={showFpConfirmPassword ? 'text' : 'password'}
+                    required
+                    placeholder="Re-enter new password"
+                    value={fpConfirmPassword}
+                    onChange={(e) => setFpConfirmPassword(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-300 rounded-xl p-2.5 pr-10 text-slate-900 outline-none focus:border-teal-700"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowFpConfirmPassword(!showFpConfirmPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition focus:outline-none p-1 cursor-pointer"
+                    aria-label={showFpConfirmPassword ? 'Hide password' : 'Show password'}
+                  >
+                    {showFpConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
               </div>
 
               <button
@@ -296,37 +360,92 @@ function LoginForm() {
         /* ================= REGULAR SIGN IN FLOW (EMAIL & PASSWORD ONLY) ================= */
         <>
           {error && (
-            <div className="bg-rose-50 border border-rose-200 text-rose-800 text-xs p-3.5 rounded-xl flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 flex-shrink-0" />
-              {error}
+            <div className="bg-rose-50/90 border-2 border-rose-300 rounded-2xl p-4 shadow-sm flex items-start gap-3 transition-all">
+              <div className="w-8 h-8 rounded-xl bg-rose-100 border border-rose-200 text-rose-600 flex items-center justify-center flex-shrink-0 mt-0.5 shadow-xs">
+                <AlertCircle className="w-4 h-4" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="font-extrabold text-xs text-rose-900">
+                  Unable to Sign In
+                </p>
+                <p className="text-xs text-rose-700 mt-0.5 leading-relaxed font-medium">
+                  {error}
+                </p>
+              </div>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4 text-xs">
+          <form onSubmit={handleSubmit} noValidate className="space-y-4 text-xs">
             <div>
-              <label className="font-bold text-slate-700 block mb-1">
-                Email Address
-              </label>
+              <div className="flex items-center justify-between mb-1">
+                <label className="font-bold text-slate-700 block">
+                  Email Address <span className="text-rose-500">*</span>
+                </label>
+                {fieldErrors.email && (
+                  <span className="text-[11px] text-rose-600 font-bold flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" />
+                    {fieldErrors.email}
+                  </span>
+                )}
+              </div>
               <input
                 type="email"
-                required
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="admin@medicare.com ya patient@example.com"
-                className="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-slate-900 outline-none focus:border-teal-700 text-xs font-medium"
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  if (fieldErrors.email) setFieldErrors((prev) => ({ ...prev, email: undefined }));
+                  if (error) setError('');
+                }}
+                placeholder="name@example.com"
+                className={`w-full rounded-xl p-3 text-slate-900 outline-none text-xs font-medium transition ${
+                  fieldErrors.email
+                    ? 'border-2 border-rose-400 bg-rose-50/40 focus:border-rose-600 focus:ring-2 focus:ring-rose-200'
+                    : 'bg-slate-50 border border-slate-300 focus:border-teal-700'
+                }`}
               />
             </div>
 
             <div>
-              <label className="font-bold text-slate-700 block mb-1">Password</label>
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full bg-slate-50 border border-slate-300 rounded-xl p-3 text-slate-900 outline-none focus:border-teal-700"
-              />
+              <div className="flex items-center justify-between mb-1">
+                <label className="font-bold text-slate-700 block">
+                  Password <span className="text-rose-500">*</span>
+                </label>
+                {fieldErrors.password && (
+                  <span className="text-[11px] text-rose-600 font-bold flex items-center gap-1">
+                    <AlertCircle className="w-3 h-3" />
+                    {fieldErrors.password}
+                  </span>
+                )}
+              </div>
+              <div className="relative">
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                    if (fieldErrors.password) setFieldErrors((prev) => ({ ...prev, password: undefined }));
+                    if (error) setError('');
+                  }}
+                  placeholder="Enter your password"
+                  className={`w-full rounded-xl p-3 pr-11 text-slate-900 outline-none font-medium transition ${
+                    fieldErrors.password
+                      ? 'border-2 border-rose-400 bg-rose-50/40 focus:border-rose-600 focus:ring-2 focus:ring-rose-200'
+                      : 'bg-slate-50 border border-slate-300 focus:border-teal-700'
+                  }`}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 transition focus:outline-none p-1 cursor-pointer"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? (
+                    <EyeOff className="w-4 h-4" />
+                  ) : (
+                    <Eye className="w-4 h-4" />
+                  )}
+                </button>
+              </div>
             </div>
 
             <button

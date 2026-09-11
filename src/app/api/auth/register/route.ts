@@ -10,10 +10,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Full name, email, and mobile number are required' }, { status: 400 });
     }
 
+    const cleanEmail = String(email || '').trim().toLowerCase();
+    if (!cleanEmail.endsWith('@gmail.com') || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail)) {
+      return NextResponse.json({ error: 'Please provide a valid Gmail address ending with @gmail.com' }, { status: 400 });
+    }
+
     // Phone validation (10 digits standard)
     const cleanPhone = phone.replace(/[^0-9]/g, '');
     if (cleanPhone.length < 10) {
-      return NextResponse.json({ error: 'Please enter a valid 10-digit mobile number' }, { status: 400 });
+      return NextResponse.json({ error: 'Please provide a valid 10-digit mobile number' }, { status: 400 });
     }
 
     // Check existing
