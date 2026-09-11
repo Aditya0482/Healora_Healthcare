@@ -6,26 +6,49 @@ const prisma = new PrismaClient();
 async function main() {
   console.log('>>> [DB Init] Checking and seeding essential categories, subcategories, and admin...');
 
-  // 1. Ensure Super Admin user exists
-  const adminEmail = 'admin@medicare.com';
-  const existingAdmin = await prisma.user.findUnique({
-    where: { email: adminEmail },
-  });
+  // 1. Ensure Super Admin users exist
+  const admins = [
+    {
+      fullName: 'Aditya Paswan',
+      email: 'adityapaswan280@gmail.com',
+      phone: '8506803821',
+      role: 'SUPER_ADMIN',
+    },
+    {
+      fullName: 'Dr. Rajesh Sharma',
+      email: 'admin@medicare.com',
+      phone: '9820011223',
+      role: 'SUPER_ADMIN',
+    },
+  ];
 
-  if (!existingAdmin) {
-    const passwordHash = await bcrypt.hash('Password@123', 10);
-    await prisma.user.create({
-      data: {
-        fullName: 'Dr. Rajesh Sharma',
-        email: adminEmail,
-        phone: '9820011223',
-        passwordHash,
-        role: 'SUPER_ADMIN',
-      },
+  for (const adm of admins) {
+    const existing = await prisma.user.findUnique({
+      where: { email: adm.email },
     });
-    console.log('  ✔ Super Admin account created:', adminEmail);
-  } else {
-    console.log('  ✔ Super Admin account already exists:', adminEmail);
+
+    if (!existing) {
+      const passwordHash = await bcrypt.hash('Password@123', 10);
+      await prisma.user.create({
+        data: {
+          fullName: adm.fullName,
+          email: adm.email,
+          phone: adm.phone,
+          passwordHash,
+          role: adm.role,
+          isActive: true,
+        },
+      });
+      console.log('  ✔ Super Admin account created:', adm.email);
+    } else {
+      if (existing.role !== 'SUPER_ADMIN' || !existing.isActive) {
+        await prisma.user.update({
+          where: { id: existing.id },
+          data: { role: 'SUPER_ADMIN', isActive: true },
+        });
+      }
+      console.log('  ✔ Super Admin account verified:', adm.email);
+    }
   }
 
   // 2. Ensure Manufacturers exist
