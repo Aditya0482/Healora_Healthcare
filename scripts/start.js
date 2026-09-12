@@ -1,4 +1,4 @@
-const { spawn } = require('child_process');
+const { spawn, execSync } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
@@ -18,6 +18,21 @@ if (!process.env.DATABASE_URL) {
 }
 if (!process.env.JWT_SECRET) {
   process.env.JWT_SECRET = 'healora_super_secure_jwt_secret_key_2026';
+}
+
+// Sync database schema and essential seeds at container startup (when DB network is active)
+console.log('>>> [Startup Step 1/2] Syncing database schema with prisma db push...');
+try {
+  execSync('npx prisma db push --accept-data-loss', { stdio: 'inherit', env: process.env });
+} catch (err) {
+  console.warn('Note: Prisma db push warning during startup:', err.message);
+}
+
+console.log('>>> [Startup Step 2/2] Checking essential categories and admin...');
+try {
+  execSync('node prisma/init-essential.js', { stdio: 'inherit', env: process.env });
+} catch (err) {
+  console.warn('Note: Init essential warning during startup:', err.message);
 }
 
 const port = process.env.PORT || '3000';
