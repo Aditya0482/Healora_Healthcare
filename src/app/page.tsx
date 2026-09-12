@@ -15,46 +15,51 @@ import {
   ShoppingCart,
 } from 'lucide-react';
 
-export const revalidate = 60; // Revalidate every 60 seconds
+export const dynamic = 'force-dynamic';
 
 async function getHomeProducts() {
-  const [diabetesProducts, cirrhosisProducts, intimateProducts] = await Promise.all([
-    prisma.product.findMany({
-      where: {
-        category: { slug: 'diabetes-care' },
-        isActive: true,
-      },
-      orderBy: [{ isFeatured: 'desc' }, { createdAt: 'desc' }],
-      include: { manufacturer: true, category: true },
-    }),
-    prisma.product.findMany({
-      where: {
-        category: { slug: 'cirrhosis-liver-care' },
-        isActive: true,
-      },
-      orderBy: [{ isFeatured: 'desc' }, { createdAt: 'desc' }],
-      include: { manufacturer: true, category: true },
-    }),
-    prisma.product.findMany({
-      where: {
-        category: { slug: 'intimate-care' },
-        isActive: true,
-      },
-      orderBy: [{ isFeatured: 'desc' }, { createdAt: 'desc' }],
-      include: { manufacturer: true, category: true },
-    }),
-  ]);
+  try {
+    const [diabetesProducts, cirrhosisProducts, intimateProducts] = await Promise.all([
+      prisma.product.findMany({
+        where: {
+          category: { slug: 'diabetes-care' },
+          isActive: true,
+        },
+        orderBy: [{ isFeatured: 'desc' }, { createdAt: 'desc' }],
+        include: { manufacturer: true, category: true },
+      }),
+      prisma.product.findMany({
+        where: {
+          category: { slug: 'cirrhosis-liver-care' },
+          isActive: true,
+        },
+        orderBy: [{ isFeatured: 'desc' }, { createdAt: 'desc' }],
+        include: { manufacturer: true, category: true },
+      }),
+      prisma.product.findMany({
+        where: {
+          category: { slug: 'intimate-care' },
+          isActive: true,
+        },
+        orderBy: [{ isFeatured: 'desc' }, { createdAt: 'desc' }],
+        include: { manufacturer: true, category: true },
+      }),
+    ]);
 
-  // Interleave cirrhosis, intimate, and diabetes products so the top 8 is a balanced mix
-  const combined = [];
-  const maxLen = Math.max(cirrhosisProducts.length, intimateProducts.length, diabetesProducts.length);
-  for (let i = 0; i < maxLen; i++) {
-    if (i < cirrhosisProducts.length) combined.push(cirrhosisProducts[i]);
-    if (i < intimateProducts.length) combined.push(intimateProducts[i]);
-    if (i < diabetesProducts.length) combined.push(diabetesProducts[i]);
+    // Interleave cirrhosis, intimate, and diabetes products so the top 8 is a balanced mix
+    const combined = [];
+    const maxLen = Math.max(cirrhosisProducts.length, intimateProducts.length, diabetesProducts.length);
+    for (let i = 0; i < maxLen; i++) {
+      if (i < cirrhosisProducts.length) combined.push(cirrhosisProducts[i]);
+      if (i < intimateProducts.length) combined.push(intimateProducts[i]);
+      if (i < diabetesProducts.length) combined.push(diabetesProducts[i]);
+    }
+
+    return combined;
+  } catch (err: any) {
+    console.warn('Could not fetch home products:', err?.message);
+    return [];
   }
-
-  return combined;
 }
 
 export default async function HomePage() {
