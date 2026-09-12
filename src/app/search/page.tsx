@@ -16,10 +16,10 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
         where: {
           isActive: true,
           OR: [
-            { name: { contains: query } },
-            { genericSaltName: { contains: query } },
-            { description: { contains: query } },
-            { medicalUses: { contains: query } },
+            { name: { contains: query, mode: 'insensitive' } },
+            { genericSaltName: { contains: query, mode: 'insensitive' } },
+            { description: { contains: query, mode: 'insensitive' } },
+            { medicalUses: { contains: query, mode: 'insensitive' } },
           ],
         },
         include: { manufacturer: true },
@@ -57,32 +57,32 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
           <AlertCircle className="w-10 h-10 text-slate-300 mx-auto" />
           <h3 className="text-base font-bold text-slate-800">No matching products found</h3>
           <p className="text-xs text-slate-500 leading-relaxed">
-            We could not find any products matching &quot;{query}&quot;. Try searching by this (e.g. <em>P1, P2, P3, P4</em>) or browse our other products.
+            We could not find any products matching &quot;{query}&quot;. Try searching by this (e.g. <em>Cirrhosis,Diabetes</em>) or browse our other products.
           </p>
           <div className="pt-2 flex flex-wrap justify-center gap-2 text-xs">
             <Link
-              href="/search?q=Metformin"
+              href="/search?q=P1"
               className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium px-3 py-1.5 rounded-full transition"
             >
-              P1
+              Liver Care
             </Link>
             <Link
-              href="/search?q=Rifaximin"
+              href="/search?q=P2"
               className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium px-3 py-1.5 rounded-full transition"
             >
-              P2
+             Health Care
             </Link>
             <Link
-              href="/search?q=Insulin"
+              href="/search?q=P3"
               className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium px-3 py-1.5 rounded-full transition"
             >
-              P3
+             Personal Hygiene
             </Link>
             <Link
-              href="/search?q=Lactulose"
+              href="/search?q=P4"
               className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium px-3 py-1.5 rounded-full transition"
             >
-             P4
+            Intimate Wellness
             </Link>
           </div>
         </div>

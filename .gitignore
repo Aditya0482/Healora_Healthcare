@@ -25,6 +25,7 @@
 **/*.db-journal
 *.sqlite
 *.sqlite-journal
+prisma/data-backup.json
 
 # User Uploads & dynamic contact spreadsheets
 public/uploads/prod-*

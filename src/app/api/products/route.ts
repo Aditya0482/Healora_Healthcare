@@ -25,10 +25,10 @@ export async function GET(req: NextRequest) {
     if (search) {
       const q = search.trim();
       where.OR = [
-        { name: { contains: q } },
-        { genericSaltName: { contains: q } },
-        { description: { contains: q } },
-        { medicalUses: { contains: q } },
+        { name: { contains: q, mode: 'insensitive' } },
+        { genericSaltName: { contains: q, mode: 'insensitive' } },
+        { description: { contains: q, mode: 'insensitive' } },
+        { medicalUses: { contains: q, mode: 'insensitive' } },
       ];
     }
 
