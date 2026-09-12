@@ -395,14 +395,20 @@ function LoginForm() {
                     />
                     <div className="flex items-center justify-between mt-1.5 px-0.5 text-[11px]">
                       <span className="text-slate-500">Didn&apos;t receive OTP?</span>
-                      <button
-                        type="button"
-                        onClick={handleFpResendOtp}
-                        disabled={fpLoading || resendCountdown > 0}
-                        className="font-bold text-teal-700 hover:text-teal-800 hover:underline disabled:text-slate-400 disabled:no-underline cursor-pointer disabled:cursor-not-allowed transition bg-transparent p-0 border-0"
-                      >
-                        {resendCountdown > 0 ? `Resend OTP in ${resendCountdown}s` : 'Resend OTP'}
-                      </button>
+                      {resendCountdown > 0 ? (
+                        <span className="font-bold text-rose-600">
+                          Resend OTP in {resendCountdown}s
+                        </span>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={handleFpResendOtp}
+                          disabled={fpLoading}
+                          className="font-bold text-teal-700 hover:text-teal-800 hover:underline cursor-pointer disabled:cursor-not-allowed transition bg-transparent p-0 border-0"
+                        >
+                          Resend OTP
+                        </button>
+                      )}
                     </div>
                   </div>
 

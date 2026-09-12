@@ -121,7 +121,7 @@ export default function Navbar({ onOpenUploadModal }: { onOpenUploadModal?: () =
               className="w-8 h-8 sm:w-10 sm:h-10 object-contain group-hover:scale-105 transition-transform flex-shrink-0"
             />
             <div className="min-w-0">
-              <div className="font-extrabold text-base sm:text-xl tracking-tight text-slate-900 leading-none">Healora<span className="text-teal-700">HealthCare</span></div>
+              <div className="font-extrabold text-base sm:text-xl tracking-tight text-slate-900 leading-none">Healora <span className="text-teal-700">HealthCare</span></div>
               <div className="text-[9px] sm:text-[10px] tracking-wider text-slate-500 font-semibold uppercase mt-0.5 truncate">YOUR TRUSTED HEALTH STORE</div>
             </div>
           </Link>

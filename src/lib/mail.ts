@@ -46,7 +46,7 @@ export async function sendOtpEmail({ to, name, otp, purpose = 'Password Reset', 
           <tr>
             <td style="background-color: #042f2e; padding: 28px 24px; text-align: center;">
               <h1 style="color: #ffffff; margin: 0; font-size: 22px; font-weight: 800; letter-spacing: -0.5px;">
-                Healora<span style="color: #2dd4bf;">HealthCare</span>
+                Healora <span style="color: #2dd4bf;">HealthCare</span>
               </h1>
               <p style="color: #99f6e4; margin: 4px 0 0 0; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">
                 Your Trusted Health Store

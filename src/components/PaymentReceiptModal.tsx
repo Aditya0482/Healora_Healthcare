@@ -149,7 +149,7 @@ export default function PaymentReceiptModal({ order, isOpen, onClose }: PaymentR
                   className="w-9 h-9 object-contain"
                 />
                 <span className="font-black text-xl text-slate-900 tracking-tight">
-                  Healora<span className="text-teal-600">HealthCare</span>
+                  Healora <span className="text-teal-600">HealthCare</span>
                 </span>
               </div>
               <p className="text-[11px] text-slate-500 max-w-xs leading-relaxed">
