@@ -13,7 +13,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: 'Healora HealthCare | Specialized Medicine E-Commerce',
+  title: 'Healora HealthCare | Health & Wellness Online Store',
   description:
     'Dedicated digital healthcare platform for specialized chronic and intimate wellness medicines with express delivery.',
   icons: {
