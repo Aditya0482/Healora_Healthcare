@@ -448,18 +448,19 @@ function AdminProductsPanel() {
   };
 
   const compressImageIfNeeded = async (file: File): Promise<File> => {
-    // If file is GIF or already under 800KB, preserve original
-    if (file.type === 'image/gif' || file.name.toLowerCase().endsWith('.gif') || file.size <= 800 * 1024) {
+    // 8MB tak ki images 100% ORIGINAL (Zero compression, Full High Quality) upload hongi
+    if (file.type === 'image/gif' || file.name.toLowerCase().endsWith('.gif') || file.size <= 8 * 1024 * 1024) {
       return file;
     }
 
+    // Agar image 8MB se bhi badi ho (e.g. 15-25MB camera RAW), tab bhi Ultra-HD 2K (2560px) + 95% High Quality maintain hogi
     return new Promise((resolve) => {
       const img = new Image();
       const objectUrl = URL.createObjectURL(file);
       img.onload = () => {
         URL.revokeObjectURL(objectUrl);
         let { width, height } = img;
-        const maxDim = 1600;
+        const maxDim = 2560; // 2K Ultra-HD clarity
 
         if (width > maxDim || height > maxDim) {
           if (width > height) {
@@ -477,7 +478,10 @@ function AdminProductsPanel() {
         const ctx = canvas.getContext('2d');
         if (!ctx) return resolve(file);
 
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = 'high';
         ctx.drawImage(img, 0, 0, width, height);
+
         canvas.toBlob(
           (blob) => {
             if (blob && blob.size < file.size) {
@@ -489,7 +493,7 @@ function AdminProductsPanel() {
             }
           },
           'image/jpeg',
-          0.85
+          0.95 // 95% Ultra High Quality (Virtually Lossless)
         );
       };
       img.onerror = () => {
