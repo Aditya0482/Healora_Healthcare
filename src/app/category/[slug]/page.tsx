@@ -31,7 +31,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
         <div className="max-w-3xl">
           <div className="text-xs font-bold text-teal-700 uppercase tracking-wider mb-2">HEALTH &amp; WELLNESS ESSENTIALS</div>
           <h1 className="text-xl sm:text-3xl font-extrabold text-slate-900 break-words">{category.name}</h1>
-          <p className="text-xs sm:text-sm text-slate-600 mt-2 leading-relaxed">{category.description}</p>
+          <p className="text-sm text-slate-800 mt-2 leading-relaxed font-normal">{category.description}</p>
         </div>
       </div>
       <div className="flex flex-col sm:flex-row sm:items-center justify-between bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-3 text-xs mb-6 gap-3">

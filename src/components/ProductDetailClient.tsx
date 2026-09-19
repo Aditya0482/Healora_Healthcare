@@ -285,7 +285,7 @@ export default function ProductDetailClient({ product, substitutes }: ProductDet
               </div>
 
               {product.description && (
-                <p className="text-xs sm:text-sm text-slate-600 mt-2.5 leading-relaxed line-clamp-3">
+                <p className="text-sm sm:text-[15px] text-black mt-3 leading-relaxed font-normal line-clamp-3">
                   {product.description}
                 </p>
               )}
@@ -386,11 +386,11 @@ export default function ProductDetailClient({ product, substitutes }: ProductDet
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="lg:col-span-8 space-y-6">
           <div className="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-4">
-            <h3 className="text-base font-bold text-slate-900 flex items-center gap-2 border-b border-slate-100 pb-3">
+            <h3 className="text-base sm:text-lg font-bold text-black flex items-center gap-2 border-b border-slate-100 pb-3">
               <Info className="w-4 h-4 text-teal-700" />
               Product Details &amp; Overview
             </h3>
-            <div className="text-xs sm:text-sm text-slate-700 leading-relaxed whitespace-pre-line">
+            <div className="text-sm sm:text-base text-black leading-7 font-normal whitespace-pre-line break-words tracking-normal">
               {product.description || 'No additional description provided for this product.'}
             </div>
           </div>
