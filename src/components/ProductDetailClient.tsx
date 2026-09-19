@@ -41,6 +41,8 @@ export default function ProductDetailClient({ product, substitutes }: ProductDet
   } catch (e) {
     if (product.images) imageList = [product.images];
   }
+  // Keep only valid, non-empty, unique images uploaded by admin
+  imageList = Array.from(new Set(imageList.map((s) => String(s).trim()).filter(Boolean)));
   if (imageList.length === 0) {
     imageList = ['https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&auto=format&fit=crop'];
   }

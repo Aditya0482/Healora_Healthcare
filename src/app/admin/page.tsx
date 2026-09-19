@@ -599,6 +599,10 @@ function AdminProductsPanel() {
     if (formIsTopProduct && !formTopCategory) {
       errors.topCategory = 'Please Select Navbar Category To Show in Navbar Category';
     }
+    const hasAtLeastOneImage = formImages.some((img) => img && img.trim().length > 0);
+    if (!hasAtLeastOneImage) {
+      errors.images = 'Please upload at least 1 product image (Gallery ya URL se)';
+    }
 
     setFieldErrors(errors);
 
@@ -701,13 +705,7 @@ function AdminProductsPanel() {
     setFormDiscountPercent('20');
     setFormSellingPrice('400');
     setFormStock('100');
-    setFormImages([
-      'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=600&auto=format&fit=crop',
-      '',
-      '',
-      '',
-      '',
-    ]);
+    setFormImages(['', '', '', '', '']);
     setFormIsActive(true);
     setFormIsTopProduct(false);
     if (categories.length > 0) {
