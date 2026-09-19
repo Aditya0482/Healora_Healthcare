@@ -1046,7 +1046,7 @@ function AdminProductsPanel() {
                       </span>
                     </td>
 
-                    <td className="py-3 px-4 font-semibold text-slate-400 line-through">
+                    <td className="py-3 px-4 font-semibold text-red-500 line-through">
                       ₹{mrpVal.toFixed(2)}
                     </td>
 

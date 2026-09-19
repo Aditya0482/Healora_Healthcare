@@ -298,7 +298,7 @@ export default function ProductDetailClient({ product, substitutes }: ProductDet
                   <span className="text-xl sm:text-3xl font-black text-slate-900">
                     ₹{(product.sellingPrice / 100).toFixed(2)}
                   </span>
-                  <span className="text-xs text-slate-400 line-through">
+                  <span className="text-xs sm:text-sm text-red-500 line-through font-medium">
                     MRP ₹{(product.mrp / 100).toFixed(2)}
                   </span>
                   {discountPercent > 0 && (

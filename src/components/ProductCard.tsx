@@ -138,7 +138,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         {/* Pricing & CTA */}
         <div className="mt-4 pt-3 border-t border-slate-100 flex items-end justify-between">
           <div>
-            <div className="text-xs text-slate-400 line-through">
+            <div className="text-xs text-red-500 line-through font-medium">
               MRP ₹{(product.mrp / 100).toFixed(2)}
             </div>
             <div className="text-base font-extrabold text-slate-900 leading-none">

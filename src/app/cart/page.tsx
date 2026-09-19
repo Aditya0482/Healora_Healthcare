@@ -176,7 +176,7 @@ export default function CartPage() {
                       <div className="text-sm font-extrabold text-slate-900">
                         ₹{((product.sellingPrice * quantity) / 100).toFixed(2)}
                       </div>
-                      <div className="text-[11px] text-slate-400 line-through">
+                      <div className="text-[11px] text-red-500 line-through font-medium">
                         MRP ₹{((product.mrp * quantity) / 100).toFixed(2)}
                       </div>
                     </div>
