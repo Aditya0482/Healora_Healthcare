@@ -57,7 +57,7 @@ export default function TermsPage() {
 
       <div className="mt-10 bg-slate-900 text-slate-300 rounded-2xl p-6">
         <h3 className="font-bold text-white mb-2">Questions about these Terms?</h3>
-        <p className="text-sm">Contact us at <span className="text-teal-400">legal@healora.in</span> or call +91 98200 11223</p>
+        <p className="text-sm">Contact us at <span className="text-teal-400">supporthealorahealthcare@gmail.com</span></p>
         <p className="text-xs text-slate-500 mt-2">We reserve the right to update these Terms at any time. Continued use of the platform after changes constitutes acceptance of the new Terms.</p>
       </div>
     </div>

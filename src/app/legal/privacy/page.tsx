@@ -40,7 +40,7 @@ export default function PrivacyPolicyPage() {
         }, {
           icon: Bell,
           title: '5. Your Rights',
-          content: `You have the right to: (a) Access your personal data at any time by logging into your account. (b) Request correction of inaccurate information. (c) Request deletion of your account and associated data (subject to legal retention requirements). (d) Opt out of marketing communications at any time. (e) Lodge a complaint with us at privacy@healora.in if you believe your data has been mishandled. We will respond to all privacy requests within 30 days.`
+          content: `You have the right to: (a) Access your personal data at any time by logging into your account. (b) Request correction of inaccurate information. (c) Request deletion of your account and associated data (subject to legal retention requirements). (d) Opt out of marketing communications at any time. (e) Lodge a complaint with us at supporthealorahealthcare@gmail.com if you believe your data has been mishandled. We will respond to all privacy requests within 30 days.`
         }, {
           icon: Shield,
           title: '6. Cookies Policy',
@@ -58,8 +58,7 @@ export default function PrivacyPolicyPage() {
 
       <div className="mt-10 bg-slate-900 text-slate-300 rounded-2xl p-6">
         <h3 className="font-bold text-white mb-2">Contact our Privacy Team</h3>
-        <p className="text-sm">For any privacy-related queries: <span className="text-teal-400">privacy@healora.in</span> | +91 98200 11223</p>
-        <p className="text-xs text-slate-500 mt-2">HealorHealthcare, Sector 4, Metro Pharma Hub, Mumbai, MH – 400001</p>
+        <p className="text-sm">For any privacy-related queries: <span className="text-teal-400">supporthealorahealthcare@gmail.com</span></p>
       </div>
     </div>
   );

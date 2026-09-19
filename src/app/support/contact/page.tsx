@@ -1,6 +1,6 @@
 'use client';
 import React, { useState } from 'react';
-import { Mail, Phone, MapPin, Send, CheckCircle, AlertCircle } from 'lucide-react';
+import { Mail, Clock, Send, CheckCircle, AlertCircle } from 'lucide-react';
 
 export default function ContactPage() {
   const [form, setForm] = useState({ name: '', email: '', phone: '', subject: '', message: '' });
@@ -96,23 +96,21 @@ export default function ContactPage() {
               <Mail className="w-5 h-5 text-teal-700" />
             </div>
             <h3 className="font-bold text-slate-900 mb-1">Email Us</h3>
-            <p className="text-sm text-slate-500">support@healora.in</p>
-            <p className="text-xs text-slate-400 mt-1">We respond within 24 hours</p>
+            <a
+              href="mailto:supporthealorahealthcare@gmail.com"
+              className="text-sm text-teal-700 hover:underline font-medium break-all"
+            >
+              supporthealorahealthcare@gmail.com
+            </a>
+            <p className="text-xs text-slate-400 mt-2">We respond within 24 hours</p>
           </div>
           <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
             <div className="w-10 h-10 bg-teal-50 rounded-xl flex items-center justify-center mb-3">
-              <Phone className="w-5 h-5 text-teal-700" />
+              <Clock className="w-5 h-5 text-teal-700" />
             </div>
-            <h3 className="font-bold text-slate-900 mb-1">Call Us</h3>
-            <p className="text-sm text-slate-500">+91 98200 11223</p>
-            <p className="text-xs text-slate-400 mt-1">Mon–Sat, 9 AM – 6 PM IST</p>
-          </div>
-          <div className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-            <div className="w-10 h-10 bg-teal-50 rounded-xl flex items-center justify-center mb-3">
-              <MapPin className="w-5 h-5 text-teal-700" />
-            </div>
-            <h3 className="font-bold text-slate-900 mb-1">Our Office</h3>
-            <p className="text-sm text-slate-500">Sector 4, Metro Pharma Hub, Mumbai, MH – 400001</p>
+            <h3 className="font-bold text-slate-900 mb-1">Support Hours</h3>
+            <p className="text-sm text-slate-600">Mon–Sat, 9 AM – 6 PM IST</p>
+            <p className="text-xs text-slate-400 mt-1">Available for order &amp; product inquiries</p>
           </div>
         </div>
 

@@ -37,7 +37,7 @@ export default function DeliveryPolicyPage() {
           content: `If you are unavailable at the time of delivery, our courier partner will attempt re-delivery on the next working day. After 3 failed attempts, the order will be returned to our warehouse. You may contact our support team to reschedule delivery or request a refund.`
         }, {
           title: '5. Damaged / Missing Items',
-          content: `If you receive a damaged package or find items missing, please do not accept the delivery or immediately take a photo/video of the package condition. Report the issue within 48 hours of delivery to support@healora.in. We will initiate a replacement or full refund within 3–5 business days.`
+          content: `If you receive a damaged package or find items missing, please do not accept the delivery or immediately take a photo/video of the package condition. Report the issue within 48 hours of delivery to supporthealorahealthcare@gmail.com. We will initiate a replacement or full refund within 3–5 business days.`
         }, {
           title: '6. International Shipping',
           content: `Currently, we only ship within India. International orders are not accepted at this time. We plan to expand to select countries in 2027.`

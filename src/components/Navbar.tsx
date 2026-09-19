@@ -131,7 +131,7 @@ export default function Navbar({ onOpenUploadModal }: { onOpenUploadModal?: () =
             <form onSubmit={handleSearchSubmit} className="relative">
               <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)}
                 onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
-                placeholder="Search products (e.g. Rifaximin, Lactulose)..."
+                placeholder="Search products (e.g. Madhusaar,Kaamya)..."
                 className="w-full bg-slate-100 border border-slate-300 focus:border-teal-500 focus:bg-white text-slate-900 text-sm rounded-full pl-11 pr-24 py-2.5 outline-none transition" />
               <Search className="w-4 h-4 text-slate-400 absolute left-4 top-3.5" />
               <button type="submit" className="absolute right-1.5 top-1.5 bg-teal-700 hover:bg-teal-800 text-white text-xs font-semibold px-4 py-1.5 rounded-full transition">Search</button>

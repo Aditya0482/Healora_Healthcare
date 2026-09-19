@@ -157,7 +157,7 @@ export default function PaymentReceiptModal({ order, isOpen, onClose }: PaymentR
                 Govt. Drug License &amp; GST Registered Entity
               </p>
               <div className="mt-2 text-[11px] text-slate-500 flex flex-col gap-0.5 font-medium">
-                <span>support@healora.com • +91 99999 88888</span>
+                <span>supporthealorahealthcare@gmail.com</span>
                 <span>Website: https://healora.com</span>
               </div>
             </div>

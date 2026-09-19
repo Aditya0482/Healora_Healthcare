@@ -61,25 +61,25 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
           </p>
           <div className="pt-2 flex flex-wrap justify-center gap-2 text-xs">
             <Link
-              href="/search?q=P1"
+              href="/search?q=LivoCare"
               className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium px-3 py-1.5 rounded-full transition"
             >
               Liver Care
             </Link>
             <Link
-              href="/search?q=P2"
+              href="/search?q=LiverVeda"
               className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium px-3 py-1.5 rounded-full transition"
             >
              Health Care
             </Link>
             <Link
-              href="/search?q=P3"
+              href="/search?q=Purusham"
               className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium px-3 py-1.5 rounded-full transition"
             >
              Personal Hygiene
             </Link>
             <Link
-              href="/search?q=P4"
+              href="/search?q=Aayumaan"
               className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium px-3 py-1.5 rounded-full transition"
             >
             Intimate Wellness

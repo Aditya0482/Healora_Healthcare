@@ -3,9 +3,22 @@
 import React from 'react';
 
 export default function WhatsAppButton() {
-  const phoneNumber = '919820011223'; // Store helpline
+  // =========================================================================
+  // WHATSAPP BUTTON SETTINGS:
+  // - Hide rakhne ke liye: false
+  // - Website pe dikhane ke liye (Unhide): true
+  // =========================================================================
+  const SHOW_WHATSAPP_BUTTON = true; // <-- Jab dikhana ho toh ise true karein
+
+  const phoneNumber = '+918796504358'; // <-- Apna WhatsApp number yahan dalein (e.g. 91XXXXXXXXXX)
+  const cleanPhone = phoneNumber.replace(/[^0-9]/g, '');
   const message = encodeURIComponent('Hi, I want to inquire about products on Healora Healthcare.');
-  const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+  const whatsappUrl = `https://wa.me/${cleanPhone}?text=${message}`;
+
+  // Agar button hide hai toh render nahi hoga
+  if (!SHOW_WHATSAPP_BUTTON) {
+    return null;
+  }
 
   return (
     <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 flex items-center group">

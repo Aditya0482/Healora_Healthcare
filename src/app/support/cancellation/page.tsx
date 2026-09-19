@@ -24,7 +24,7 @@ export default function CancellationPage() {
       <div className="space-y-8">
         {[{
           title: '1. Order Cancellation',
-          content: `You may cancel your order at any time before it has been dispatched from our warehouse. Once the order is dispatched (you will receive a dispatch notification), cancellation is no longer possible. To cancel, go to My Orders → Select Order → Cancel Order. Alternatively, contact our support team at support@healora.in or call +91 98200 11223 with your order number.`
+          content: `You may cancel your order at any time before it has been dispatched from our warehouse. Once the order is dispatched (you will receive a dispatch notification), cancellation is no longer possible. To cancel, go to My Orders → Select Order → Cancel Order. Alternatively, contact our support team at supporthealorahealthcare@gmail.com with your order number.`
         }, {
           title: '2. Refund Eligibility',
           content: `Refunds are applicable in the following cases: (a) Order cancelled before dispatch. (b) Wrong product delivered. (c) Damaged or defective product received. (d) Order not delivered within 10 business days of confirmed dispatch. Refunds are NOT applicable for: products that have been used or opened, orders where the delivery address was incorrect (customer error), or orders where the customer was unavailable for all 3 delivery attempts.`
@@ -36,7 +36,7 @@ export default function CancellationPage() {
           content: `For eligible returns (damaged/wrong product), our delivery partner will schedule a pickup from your address. Please ensure: the product is unused and in original packaging, all tags and accessories are intact, and you have the original invoice. Once the return is received and inspected at our warehouse, your refund will be initiated within 2 business days.`
         }, {
           title: '5. Contact for Disputes',
-          content: `If your refund or cancellation request is not resolved within 10 business days, please escalate to: grievance@healora.in | Subject: Refund Dispute — [Order Number]. We aim to resolve all disputes within 15 working days as per consumer protection guidelines.`
+          content: `If your refund or cancellation request is not resolved within 10 business days, please escalate to: supporthealorahealthcare@gmail.com | Subject: Refund Dispute — [Order Number]. We aim to resolve all disputes within 15 working days as per consumer protection guidelines.`
         }].map((section) => (
           <div key={section.title} className="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
             <h2 className="text-lg font-bold text-slate-900 mb-3">{section.title}</h2>
