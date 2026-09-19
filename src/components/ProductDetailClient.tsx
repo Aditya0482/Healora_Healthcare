@@ -276,11 +276,11 @@ export default function ProductDetailClient({ product, substitutes }: ProductDet
                 {product.name}
               </h1>
 
-              {/* Manufacturer Information Badge */}
+              {/* Marketed By Information Badge */}
               <div className="mt-2.5 inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100/90 border border-slate-200 text-slate-700 rounded-lg text-xs font-semibold">
                 <Building2 className="w-3.5 h-3.5 text-teal-700 flex-shrink-0" />
                 <span>
-                  Manufactured by: <strong className="text-slate-900 font-bold">{product.manufacturer?.name || 'Healora HealthCare Pvt. Ltd.'}</strong>
+                  Marketed by: <strong className="text-slate-900 font-bold">Healora HealthCare</strong>
                 </span>
               </div>
 
