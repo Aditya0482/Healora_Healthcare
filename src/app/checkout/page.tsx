@@ -553,7 +553,12 @@ export default function CheckoutPage() {
                   <div className="space-y-2 pt-3 border-t border-slate-100 text-xs">
                     <div className="flex justify-between text-slate-500">
                       <span>Total MRP:</span>
-                      <span className="line-through text-red-500 font-medium">₹{(totalMrpAmount / 100).toFixed(2)}</span>
+                      <span
+                        className="line-through text-red-600 decoration-red-600 font-semibold"
+                        style={{ color: '#dc2626' }}
+                      >
+                        ₹{(totalMrpAmount / 100).toFixed(2)}
+                      </span>
                     </div>
                     <div className="flex justify-between text-emerald-600 font-bold">
                       <span>Price Discount:</span>
