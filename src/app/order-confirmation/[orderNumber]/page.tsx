@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/auth';
 import OrderTracker from '@/components/OrderTracker';
 import ReceiptActionButtons from '@/components/ReceiptActionButtons';
+import MetaPurchaseTracker from '@/components/MetaPurchaseTracker';
 import { CheckCircle2, Package, ArrowRight, Download } from 'lucide-react';
 
 interface OrderConfirmationPageProps {
@@ -40,6 +41,15 @@ export default async function OrderConfirmationPage({ params }: OrderConfirmatio
 
   return (
     <div className="max-w-4xl mx-auto px-4 py-12 space-y-8">
+      {/* Meta Pixel Purchase Tracker */}
+      <MetaPurchaseTracker
+        orderNumber={order.orderNumber}
+        amount={order.finalPayableAmount / 100}
+        currency="INR"
+        contentIds={order.items.map((item) => item.productId)}
+        numItems={order.items.reduce((acc, item) => acc + item.quantity, 0)}
+      />
+
       {/* Top Celebration Card */}
       <div className="bg-white border border-slate-200 rounded-3xl p-8 sm:p-10 text-center shadow-sm space-y-4">
         <div className="w-16 h-16 rounded-2xl bg-emerald-100 text-emerald-700 flex items-center justify-center mx-auto shadow-inner">

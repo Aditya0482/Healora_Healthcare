@@ -2,6 +2,7 @@ import React from 'react';
 import { notFound } from 'next/navigation';
 import { prisma } from '@/lib/prisma';
 import ProductDetailClient from '@/components/ProductDetailClient';
+import MetaViewContentTracker from '@/components/MetaViewContentTracker';
 
 interface ProductPageProps {
   params: { slug: string };
@@ -36,6 +37,12 @@ export default async function ProductPage({ params }: ProductPageProps) {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
+      <MetaViewContentTracker
+        id={product.id}
+        name={product.name}
+        category={product.category?.name}
+        price={product.sellingPrice / 100}
+      />
       <ProductDetailClient product={product} substitutes={substitutes} />
     </div>
   );

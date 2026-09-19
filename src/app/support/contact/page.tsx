@@ -1,5 +1,6 @@
 'use client';
 import React, { useState } from 'react';
+import * as fpixel from '@/lib/fpixel';
 import { Mail, Clock, Send, CheckCircle, AlertCircle } from 'lucide-react';
 
 export default function ContactPage() {
@@ -68,6 +69,11 @@ export default function ContactPage() {
       const data = await res.json();
       if (res.ok) {
         setSuccess(true);
+        try {
+          fpixel.event('Contact');
+        } catch {
+          // ignore tracking error
+        }
         setForm({ name: '', email: '', phone: '', subject: '', message: '' });
         setFieldErrors({});
       } else {

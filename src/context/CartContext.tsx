@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
+import * as fpixel from '@/lib/fpixel';
 
 export interface CartProduct {
   id: string;
@@ -71,6 +72,18 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   }, [items, mounted]);
 
   const addToCart = (product: CartProduct, quantity = 1) => {
+    try {
+      fpixel.event('AddToCart', {
+        content_name: product.name,
+        content_ids: [product.id],
+        content_type: 'product',
+        value: (product.sellingPrice * quantity) / 100,
+        currency: 'INR',
+      });
+    } catch {
+      // ignore tracking errors
+    }
+
     setItems((prev) => {
       const existingIndex = prev.findIndex((item) => item.product.id === product.id);
       if (existingIndex > -1) {

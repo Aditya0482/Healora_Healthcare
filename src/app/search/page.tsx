@@ -2,6 +2,7 @@ import React from 'react';
 import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import ProductCard from '@/components/ProductCard';
+import MetaSearchTracker from '@/components/MetaSearchTracker';
 import { Search, AlertCircle } from 'lucide-react';
 
 interface SearchPageProps {
@@ -28,6 +29,7 @@ export default async function SearchPage({ searchParams }: SearchPageProps) {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
+      {query && <MetaSearchTracker query={query} />}
       {/* Search Header */}
       <div className="bg-white border border-slate-200 rounded-2xl p-6 mb-8 shadow-sm">
         <div className="flex items-center gap-3">

@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import type { Metadata, Viewport } from 'next';
 import Script from 'next/script';
 import './globals.css';
@@ -6,6 +7,7 @@ import { CartProvider } from '@/context/CartContext';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import WhatsAppButton from '@/components/WhatsAppButton';
+import MetaPixelTracker from '@/components/MetaPixelTracker';
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -61,6 +63,10 @@ export default function RootLayout({
           />
         </noscript>
         {/* End Meta Pixel Code */}
+
+        <Suspense fallback={null}>
+          <MetaPixelTracker />
+        </Suspense>
 
         <AuthProvider>
           <CartProvider>

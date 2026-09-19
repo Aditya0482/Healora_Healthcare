@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { useCart } from '@/context/CartContext';
+import * as fpixel from '@/lib/fpixel';
 import RazorpayModal from '@/components/RazorpayModal';
 import {
   MapPin,
@@ -65,6 +66,25 @@ export default function CheckoutPage() {
       router.push('/cart');
     }
   }, [user, authLoading, items, router, activeRazorpayOrder]);
+
+  // Track Meta Pixel InitiateCheckout
+  const checkoutTrackedRef = useRef(false);
+  useEffect(() => {
+    if (!checkoutTrackedRef.current && items.length > 0) {
+      try {
+        fpixel.event('InitiateCheckout', {
+          num_items: totalItemsCount,
+          content_ids: items.map((i) => i.product.id),
+          content_type: 'product',
+          value: finalPayableAmount / 100,
+          currency: 'INR',
+        });
+        checkoutTrackedRef.current = true;
+      } catch {
+        // ignore tracking errors
+      }
+    }
+  }, [items, totalItemsCount, finalPayableAmount]);
 
   // Load user addresses
   useEffect(() => {
