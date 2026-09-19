@@ -27,19 +27,45 @@ export async function POST(req: NextRequest) {
         );
       }
 
-      // Validate file type (SVG strictly forbidden to prevent stored script execution)
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif', 'image/avif'];
-      if (!allowedTypes.includes(file.type)) {
+      // Validate file type (allow JPG, PNG, WEBP, GIF, AVIF, JFIF, BMP; strictly block SVG for security)
+      const allowedMimes = [
+        'image/jpeg',
+        'image/jpg',
+        'image/pjpeg',
+        'image/jfif',
+        'image/png',
+        'image/x-png',
+        'image/webp',
+        'image/gif',
+        'image/avif',
+        'image/bmp',
+      ];
+      const origName = file.name || 'image.jpg';
+      let ext = path.extname(origName).toLowerCase();
+      const allowedExts = ['.jpg', '.jpeg', '.png', '.webp', '.gif', '.avif', '.jfif', '.bmp'];
+
+      const isMimeAllowed = allowedMimes.includes(file.type) || file.type.startsWith('image/');
+      const isExtAllowed = allowedExts.includes(ext);
+
+      // Block SVGs explicitly
+      if (ext === '.svg' || file.type === 'image/svg+xml') {
+        return NextResponse.json(
+          { error: 'SVG images are not allowed for security reasons. Please use JPG, PNG, or WEBP.' },
+          { status: 400 }
+        );
+      }
+
+      if (!isMimeAllowed && !isExtAllowed) {
         return NextResponse.json(
           { error: 'Invalid file format. Only JPG, PNG, WEBP, and GIF images are allowed.' },
           { status: 400 }
         );
       }
 
-      // Max size: 5MB
-      if (file.size > 5 * 1024 * 1024) {
+      // Max size: 25MB (gives plenty of headroom for high-res camera photos)
+      if (file.size > 25 * 1024 * 1024) {
         return NextResponse.json(
-          { error: 'Image file is too large. Maximum allowed size is 5MB.' },
+          { error: 'Image file is too large. Maximum allowed size is 25MB.' },
           { status: 400 }
         );
       }
@@ -49,13 +75,12 @@ export async function POST(req: NextRequest) {
         fs.mkdirSync(uploadsDir, { recursive: true });
       }
 
-      // Determine file extension
-      const origName = file.name || 'image.jpg';
-      let ext = path.extname(origName).toLowerCase();
-      if (!ext || ext.length > 5) {
-        if (file.type === 'image/png') ext = '.png';
-        else if (file.type === 'image/webp') ext = '.webp';
-        else if (file.type === 'image/gif') ext = '.gif';
+      // Determine clean file extension
+      if (!ext || ext.length > 6 || !allowedExts.includes(ext)) {
+        if (file.type.includes('png')) ext = '.png';
+        else if (file.type.includes('webp')) ext = '.webp';
+        else if (file.type.includes('gif')) ext = '.gif';
+        else if (file.type.includes('avif')) ext = '.avif';
         else ext = '.jpg';
       }
 

@@ -447,17 +447,71 @@ function AdminProductsPanel() {
     setFormImages(updated);
   };
 
-  const handleFileUpload = async (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  const compressImageIfNeeded = async (file: File): Promise<File> => {
+    // If file is GIF or already under 800KB, preserve original
+    if (file.type === 'image/gif' || file.name.toLowerCase().endsWith('.gif') || file.size <= 800 * 1024) {
+      return file;
+    }
 
-    if (!file.type.startsWith('image/')) {
-      setFormError('Please Select Valid Image File(JPG, PNG, WEBP, GIF).');
+    return new Promise((resolve) => {
+      const img = new Image();
+      const objectUrl = URL.createObjectURL(file);
+      img.onload = () => {
+        URL.revokeObjectURL(objectUrl);
+        let { width, height } = img;
+        const maxDim = 1600;
+
+        if (width > maxDim || height > maxDim) {
+          if (width > height) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return resolve(file);
+
+        ctx.drawImage(img, 0, 0, width, height);
+        canvas.toBlob(
+          (blob) => {
+            if (blob && blob.size < file.size) {
+              const cleanFileName = file.name.replace(/\.[^.]+$/, '.jpg');
+              const compressedFile = new File([blob], cleanFileName, { type: 'image/jpeg' });
+              resolve(compressedFile);
+            } else {
+              resolve(file);
+            }
+          },
+          'image/jpeg',
+          0.85
+        );
+      };
+      img.onerror = () => {
+        URL.revokeObjectURL(objectUrl);
+        resolve(file);
+      };
+      img.src = objectUrl;
+    });
+  };
+
+  const handleFileUpload = async (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+    const rawFile = e.target.files?.[0];
+    if (!rawFile) return;
+
+    const isImageExt = /\.(jpe?g|png|webp|gif|avif|bmp|jfif)$/i.test(rawFile.name);
+    if (!rawFile.type.startsWith('image/') && !isImageExt) {
+      setFormError('Please Select Valid Image File (JPG, PNG, WEBP, GIF).');
       return;
     }
 
-    if (file.size > 10 * 1024 * 1024) {
-      setFormError('Image Size Is Greater Than 10 MB.Please Select Image Size 10 MB or Less Than 10 MB.');
+    if (rawFile.size > 25 * 1024 * 1024) {
+      setFormError('Image Size Is Greater Than 25 MB. Please Select Image Size 25 MB or Less.');
       return;
     }
 
@@ -465,8 +519,11 @@ function AdminProductsPanel() {
     setFormError(null);
 
     try {
+      // Automatically compress large laptop photos in browser before upload
+      const fileToUpload = await compressImageIfNeeded(rawFile);
+
       const formData = new FormData();
-      formData.append('file', file);
+      formData.append('file', fileToUpload);
 
       const res = await fetch('/api/admin/upload', {
         method: 'POST',
@@ -477,24 +534,30 @@ function AdminProductsPanel() {
       if (res.ok && data.url) {
         handleImageChange(index, data.url);
       } else {
-        // Fallback: convert to base64 Data URL so upload never fails
+        if (fileToUpload.size <= 1024 * 1024) {
+          const reader = new FileReader();
+          reader.onload = () => {
+            if (typeof reader.result === 'string') {
+              handleImageChange(index, reader.result);
+            }
+          };
+          reader.readAsDataURL(fileToUpload);
+        } else {
+          setFormError(data.error || 'Failed to upload image. Please try another image.');
+        }
+      }
+    } catch {
+      if (rawFile.size <= 1024 * 1024) {
         const reader = new FileReader();
         reader.onload = () => {
           if (typeof reader.result === 'string') {
             handleImageChange(index, reader.result);
           }
         };
-        reader.readAsDataURL(file);
+        reader.readAsDataURL(rawFile);
+      } else {
+        setFormError('Error uploading image. Please check your network or try another file.');
       }
-    } catch {
-      // Fallback: convert to base64 Data URL
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (typeof reader.result === 'string') {
-          handleImageChange(index, reader.result);
-        }
-      };
-      reader.readAsDataURL(file);
     } finally {
       setUploadingIdx(null);
       e.target.value = '';
